@@ -1,0 +1,19 @@
+---
+
+- name: Remove centos packaged docker
+  yum:
+    name: docker
+    state: absent
+    
+- name: Install Docker
+  yum:
+    name: "{{ docker_pkg_name }}"
+    state: "{{ docker_pkg_state }}"
+    disable_gpg_check: no
+
+- name: copy docker-compose binary
+  copy:
+    src: "docker-compose_1.7.1"
+    dest: "/usr/local/bin/docker-compose"
+    mode: 0755
+  when: enable_docker_compose

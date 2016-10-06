@@ -1,0 +1,36 @@
+---
+
+# Create docker config directoy
+- name: create docker config directory
+  file:
+    path: /etc/docker
+    state: directory
+    mode: 0600
+    owner: root
+    group: root
+
+# configure docker deamon json file
+- name: configure docker daemon.json
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    mode: 0400
+    owner: root
+    group: "{{ docker_group }}"
+  notify: restart docker
+
+# push client config if enabled:
+- name: create docker client config directory
+  file:
+    state: directory
+    #path: "{{ ansible_env.HOME }}/.docker"
+    path: "/root/.docker"
+    mode: 0750
+  when: docker_client_config_enabled == true
+
+- name: configure docker client config.json
+  template:
+    src: "config.json.j2"
+    dest: "/root/.docker/config.json"
+    mode: 0440
+  when: docker_client_config_enabled == true
