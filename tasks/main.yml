@@ -1,5 +1,17 @@
 ---
+
 - include: repo.yml
+  tags:
+    - "docker_repo"
+
 - include: install.yml
+  tags:
+    - "docker_install"
+
 - include: config.yml
+  tags:
+    - "docker_config"
+
 - include: service.yml
+  tags:
+    - "docker_service"
