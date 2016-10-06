@@ -1,7 +1,7 @@
 galaxy_info:
-  author: your name
-  description: your description
-  company: your company (optional)
+  author: George Bolo
+  description: Role for Installation and Configuration of Docker
+  company: linuxctl.com
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
@@ -14,9 +14,9 @@ galaxy_info:
   # - GPLv3
   # - Apache
   # - CC-BY
-  license: license (GPLv2, CC-BY, etc)
+  license: MIT
 
-  min_ansible_version: 1.2
+  min_ansible_version: 2.1
 
   # Optionally specify the branch Galaxy will use when accessing the GitHub
   # repo for this role. During role install, if no tags are available,
@@ -31,13 +31,13 @@ galaxy_info:
   # the ones that apply to your role. If you don't see your
   # platform on this list, let us know and we'll get it added!
   #
-  #platforms:
-  #- name: EL
-  #  versions:
+  platforms:
+  - name: EL
+    versions:
   #  - all
   #  - 5
   #  - 6
-  #  - 7
+    - 7
   #- name: GenericUNIX
   #  versions:
   #  - all
@@ -185,7 +185,11 @@ galaxy_info:
   #  - stretch
   #  - wheezy
 
-  galaxy_tags: []
+  galaxy_tags:
+    - docker
+    - container
+    - micro services
+    - centos
     # List tags for your role here, one per line. A tag is
     # a keyword that describes and categorizes the role.
     # Users find roles by searching for tags. Be sure to
