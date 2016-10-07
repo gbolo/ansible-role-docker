@@ -76,7 +76,7 @@ docker_config_bridge: ~
 docker_config_bip: "172.16.0.1/24"
 docker_config_fixed_cidr: "172.16.0.0/24"
 docker_config_fixed_cidr_v6: ""
-docker_config_default_gateway: "172.16.0.1"
+docker_config_default_gateway: ""
 docker_config_default_gateway_v6: ""
 docker_config_icc: true
 docker_config_raw_logs: false
