@@ -2,6 +2,6 @@
 
 - name: Ensure Docker is Running and Enabled
   service:
-    name: docker
+    name: "{{ docker_service_name }}"
     state: started
-    enabled: yes
+    enabled: "{{ docker_service_enable }}"

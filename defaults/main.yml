@@ -1,12 +1,20 @@
 ---
-
 # OS related -------------------------------------------------------------------
+## use official docker repository
 docker_repo_enabled: true
+## name of docker package to install
 docker_pkg_name: "docker-engine"
+## state of package (present, latest, exc.)
 docker_pkg_state: present
+## name of docker service
+docker_service_name: "docker"
+## should docker daemon start on boot?
+docker_service_enable: true
+## name group for docker socket file
 docker_group: "docker"
 
 # docker client configuration --------------------------------------------------
+## enable authentication for docker registry
 docker_client_config_enabled: false
 # for auth (docker login) use something like:
 #docker_client_config:
@@ -15,7 +23,8 @@ docker_client_config_enabled: false
 #      auth: "SOME_STRING"
 #      email: "SOME_EMAIL"
 
-# default dockerd configuration ------------------------------------------------
+# default dockerd configuration options ----------------------------------------
+## https://docs.docker.com/engine/reference/commandline/dockerd/#/linux-configuration-file
 docker_config_authorization_plugins: []
 docker_config_dns: []
 docker_config_dns_opts: []
@@ -40,10 +49,10 @@ docker_config_debug: false
 docker_config_hosts:
   - "unix:///var/run/docker.sock"
 docker_config_log_level: ""
-# disable tls for now because tlsverify option implemented strangly
+# disable tls for now because tlsverify option implemented strangely
 # https://github.com/docker/docker/issues/27105
 ##docker_config_tls: ~
-# broken if you specify anything but true
+# broken if you specify anything but true for tlsverify
 ##docker_config_tlsverify: ~
 ##docker_config_tlscacert: ""
 ##docker_config_tlscert: ""
@@ -77,6 +86,7 @@ docker_config_oom_score_adjust: -500
 
 # ==============================================================================
 # dictionary of full configuration file (dont need to touch this) --------------
+# ==============================================================================
 docker_config_full:
   "authorization-plugins": "{{ docker_config_authorization_plugins }}"
   "dns": "{{ docker_config_dns }}"
