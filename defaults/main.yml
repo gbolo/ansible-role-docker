@@ -56,10 +56,10 @@ docker_config_group: "{{ docker_group }}"
 docker_config_cgroup_parent: ""
 docker_config_default_ulimits: {}
 docker_config_ipv6: false
-docker_config_iptables: false
-docker_config_ip_forward: false
-docker_config_ip_masq: false
-docker_config_userland_proxy: false
+docker_config_iptables: true
+docker_config_ip_forward: true
+docker_config_ip_masq: true
+docker_config_userland_proxy: true
 docker_config_ip: "0.0.0.0"
 docker_config_bridge: ""
 docker_config_bip: ""
