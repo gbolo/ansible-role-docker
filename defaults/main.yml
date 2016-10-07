@@ -16,6 +16,8 @@ docker_group: "docker"
 # docker client configuration --------------------------------------------------
 ## enable authentication for docker registry
 docker_client_config_enabled: false
+## the location we should push client configuration
+docker_client_config_location: "/root/.docker/config.json"
 # for auth (docker login) use something like:
 #docker_client_config:
 #  auths:

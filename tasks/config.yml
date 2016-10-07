@@ -23,14 +23,13 @@
 - name: create docker client config directory
   file:
     state: directory
-    #path: "{{ ansible_env.HOME }}/.docker"
-    path: "/root/.docker"
+    path: "{{ docker_client_config_location | dirname }}"
     mode: 0750
   when: docker_client_config_enabled == true
 
 - name: configure docker client config.json
   template:
     src: "config.json.j2"
-    dest: "/root/.docker/config.json"
+    dest: "{{ docker_client_config_location }}"
     mode: 0440
   when: docker_client_config_enabled == true
