@@ -28,7 +28,7 @@ docker_config_labels: []
 docker_config_live_restore: true
 docker_config_log_driver: ""
 docker_config_log_opts: {}
-docker_config_mtu: 0
+docker_config_mtu: 1500
 docker_config_pidfile: "/var/run/docker.pid"
 docker_config_graph: "/var/lib/docker"
 docker_config_cluster_store: ""
@@ -61,13 +61,13 @@ docker_config_ip_forward: true
 docker_config_ip_masq: true
 docker_config_userland_proxy: true
 docker_config_ip: "0.0.0.0"
-docker_config_bridge: ""
-docker_config_bip: ""
-docker_config_fixed_cidr: ""
+docker_config_bridge: ~
+docker_config_bip: "172.16.0.1/24"
+docker_config_fixed_cidr: "172.16.0.0/24"
 docker_config_fixed_cidr_v6: ""
 docker_config_default_gateway: ""
 docker_config_default_gateway_v6: ""
-docker_config_icc: false
+docker_config_icc: true
 docker_config_raw_logs: false
 docker_config_registry_mirrors: []
 docker_config_insecure_registries: []
