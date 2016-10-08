@@ -4,7 +4,7 @@
   yum_repository:
     name: docker
     description: Docker Repository
-    baseurl: https://yum.dockerproject.org/repo/main/centos/7/
+    baseurl: "https://yum.dockerproject.org/repo/{{ docker_repo_branch }}/centos/7/"
     gpgkey: https://yum.dockerproject.org/gpg
     gpgcheck: yes
   when: docker_repo_enabled
