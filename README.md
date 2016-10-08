@@ -1,7 +1,9 @@
 Docker - Ansible Role
 =========
 
-This role will fully configure your docker installation on CentOS 7
+[![Build Status](https://travis-ci.org/gbolo/ansible-role-docker.svg?branch=master)](https://travis-ci.org/gbolo/ansible-role-docker)
+
+This role will fully configure and install [Docker](https://www.docker.com/) on RHEL/CentOS
 
 Requirements
 ------------
