@@ -17,6 +17,8 @@ The following variables can be used to customize the docker installation:
 # OS related -------------------------------------------------------------------
 ## use official docker repository
 docker_repo_enabled: true
+## choose docker repo branch: main, experimental, testing
+docker_repo_branch: "main"
 ## name of docker package to install
 docker_pkg_name: "docker-engine"
 ## state of package (present, latest, exc.)
