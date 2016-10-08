@@ -104,26 +104,29 @@ docker_config_default_runtime: "runc"
 docker_config_oom_score_adjust: -500
 ```
 
-Dependencies
-------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
-
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Install latest docker **stable** release on your local centos server
+```
+- hosts: localhost
+  roles:
+     - { role: gbolo.docker, docker_pkg_state: latest }
+```
+Install latest docker **experimental** release on your local centos server
+```
+- hosts: localhost
+  roles:
+     - { role: gbolo.docker, docker_pkg_state: latest, docker_repo_branch: experimental }
+```
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
 
-License
+Author and License
 -------
+`docker` role written by:
+- George Bolo | [linuxctl.com](https://linuxctl.com)
 
-BSD
+License: **MIT**
 
-Author Information
-------------------
+`FREE SOFTWARE, HELL YEAH!`
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
