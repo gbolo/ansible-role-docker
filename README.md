@@ -13,7 +13,7 @@ Role Variables
 --------------
 
 The following variables can be used to customize the docker installation:
-```
+```yaml
 # OS related -------------------------------------------------------------------
 ## use official docker repository
 docker_repo_enabled: true
