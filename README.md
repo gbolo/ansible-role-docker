@@ -3,7 +3,7 @@ Docker - Ansible Role
 
 [![Build Status](https://travis-ci.org/gbolo/ansible-role-docker.svg?branch=master)](https://travis-ci.org/gbolo/ansible-role-docker)
 
-This role will fully configure and install [Docker](https://www.docker.com/) on RHEL/CentOS
+This role will fully configure and install [Docker](https://www.docker.com/) on RHEL/CentOS 7. In it's current form, **this role only supports docker versions 1.11+**.
 
 Requirements
 ------------
@@ -106,7 +106,7 @@ docker_config_default_runtime: "runc"
 docker_config_oom_score_adjust: -500
 ```
 
-Example Playbook
+Example Playbooks
 ----------------
 
 Install latest docker **stable** release on your local centos server
@@ -121,7 +121,12 @@ Install latest docker **experimental** release on your local centos server
   roles:
      - { role: gbolo.docker, docker_pkg_state: latest, docker_repo_branch: experimental }
 ```
-
+Install older docker **stable** release on your local centos server
+```
+- hosts: localhost
+  roles:
+     - { role: gbolo.docker, docker_pkg_name: docker-engine-1.11.2 }
+```
 
 Author and License
 -------
