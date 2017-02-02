@@ -29,30 +29,26 @@ docker_client_config_location: "/root/.docker/config.json"
 
 # default dockerd configuration options ----------------------------------------
 ## https://docs.docker.com/engine/reference/commandline/dockerd/#/linux-configuration-file
-docker_config_authorization_plugins: []
-docker_config_dns: []
-docker_config_dns_opts: []
-docker_config_dns_search: []
-docker_config_exec_opts: []
-docker_config_exec_root: ""
-docker_config_storage_driver: ""
-docker_config_storage_opts: []
-docker_config_labels: []
-docker_config_live_restore: true
+docker_config_hosts:
+  - "unix:///var/run/docker.sock"
+docker_config_graph: "/var/lib/docker"
 docker_config_log_driver: ""
 docker_config_log_opts: {}
-docker_config_mtu: 1500
-docker_config_pidfile: "/var/run/docker.pid"
-docker_config_graph: "/var/lib/docker"
-docker_config_cluster_store: ""
-docker_config_cluster_store_opts: {}
-docker_config_cluster_advertise: ""
 docker_config_max_concurrent_downloads: 3
 docker_config_max_concurrent_uploads: 5
 docker_config_debug: false
-docker_config_hosts:
-  - "unix:///var/run/docker.sock"
 docker_config_log_level: ""
+docker_config_bridge: ~
+docker_config_bip: "172.16.0.1/24"
+docker_config_fixed_cidr: "172.16.0.0/24"
+docker_config_fixed_cidr_v6: ""
+docker_config_default_gateway: ""
+docker_config_default_gateway_v6: ""
+docker_config_selinux_enabled: false
+docker_config_ip: "0.0.0.0"
+docker_config_group: "{{ docker_group }}"
+docker_config_insecure_registries: []
+
 # disable tls for now because tlsverify option implemented strangely
 # https://github.com/docker/docker/issues/27105
 ##docker_config_tls: ~
@@ -61,80 +57,33 @@ docker_config_log_level: ""
 ##docker_config_tlscacert: ""
 ##docker_config_tlscert: ""
 ##docker_config_tlskey: ""
-docker_config_swarm_default_advertise_addr: ""
-docker_config_api_cors_header: ""
-docker_config_selinux_enabled: false
-docker_config_userns_remap: ""
-docker_config_group: "{{ docker_group }}"
-docker_config_cgroup_parent: ""
-docker_config_default_ulimits: {}
-docker_config_ipv6: false
-docker_config_iptables: true
-docker_config_ip_forward: true
-docker_config_ip_masq: true
-docker_config_userland_proxy: true
-docker_config_ip: "0.0.0.0"
-docker_config_bridge: ~
-docker_config_bip: "172.16.0.1/24"
-docker_config_fixed_cidr: "172.16.0.0/24"
-docker_config_fixed_cidr_v6: ""
-docker_config_default_gateway: ""
-docker_config_default_gateway_v6: ""
-docker_config_icc: true
-docker_config_raw_logs: false
-docker_config_registry_mirrors: []
-docker_config_insecure_registries: []
-docker_config_disable_legacy_registry: false
-docker_config_default_runtime: "runc"
-docker_config_oom_score_adjust: -500
+
 
 # ==============================================================================
-# dictionary of full configuration file (dont need to touch this) --------------
+# dictionary of common configuration options  ----------------------------------
 # ==============================================================================
-docker_config_full:
-  "authorization-plugins": "{{ docker_config_authorization_plugins }}"
-  "dns": "{{ docker_config_dns }}"
-  "dns-opts": "{{ docker_config_dns_opts }}"
-  "dns-search": "{{ docker_config_dns_search }}"
-  "exec-opts": "{{ docker_config_exec_opts }}"
-  "exec-root": "{{ docker_config_exec_root }}"
-  "storage-driver": "{{ docker_config_storage_driver }}"
-  "storage-opts": "{{ docker_config_storage_opts }}"
-  "labels": "{{ docker_config_labels }}"
-  "live-restore": "{{ docker_config_live_restore }}"
+docker_config_common:
   "log-driver": "{{ docker_config_log_driver }}"
   "log-opts": "{{ docker_config_log_opts }}"
-  "mtu": "{{ docker_config_mtu }}"
-  "pidfile": "{{ docker_config_pidfile }}"
   "graph": "{{ docker_config_graph }}"
-  "cluster-store": "{{ docker_config_cluster_store }}"
-  "cluster-store-opts": "{{ docker_config_cluster_store_opts }}"
-  "cluster-advertise": "{{ docker_config_cluster_advertise }}"
   "max-concurrent-downloads": "{{ docker_config_max_concurrent_downloads }}"
   "max-concurrent-uploads": "{{ docker_config_max_concurrent_uploads }}"
   "debug": "{{ docker_config_debug }}"
   "hosts": "{{ docker_config_hosts }}"
   "log-level": "{{ docker_config_log_level }}"
-  "swarm-default-advertise-addr": "{{ docker_config_swarm_default_advertise_addr }}"
-  "api-cors-header": "{{ docker_config_api_cors_header }}"
   "selinux-enabled": "{{ docker_config_selinux_enabled }}"
-  "userns-remap": "{{ docker_config_userns_remap }}"
   "group": "{{ docker_config_group }}"
-  "cgroup-parent": "{{ docker_config_cgroup_parent }}"
-  "default-ulimits": "{{ docker_config_default_ulimits }}"
-  "ipv6": "{{ docker_config_ipv6 }}"
-  "iptables": "{{ docker_config_iptables }}"
-  "ip-forward": "{{ docker_config_ip_forward }}"
-  "ip-masq": "{{ docker_config_ip_masq }}"
-  "userland-proxy": "{{ docker_config_userland_proxy }}"
-  "ip": "{{ docker_config_ip }}"
   "bridge": "{{ docker_config_bridge }}"
   "bip": "{{ docker_config_bip }}"
   "fixed-cidr": "{{ docker_config_fixed_cidr }}"
   "fixed-cidr-v6": "{{ docker_config_fixed_cidr_v6 }}"
   "default-gateway": "{{ docker_config_default_gateway }}"
   "default-gateway-v6": "{{ docker_config_default_gateway_v6 }}"
-  "icc": "{{ docker_config_icc }}"
-  "raw-logs": "{{ docker_config_raw_logs }}"
-  "registry-mirrors": "{{ docker_config_registry_mirrors }}"
   "insecure-registries": "{{ docker_config_insecure_registries }}"
+  "ip": "{{ docker_config_ip }}"
+
+# ==============================================================================
+# dictionary for extra/custom settings that can be added -----------------------
+# ==============================================================================
+# https://docs.docker.com/engine/reference/commandline/dockerd/#/linux-configuration-file
+docker_config_custom: {}
