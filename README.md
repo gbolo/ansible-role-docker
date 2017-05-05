@@ -91,8 +91,8 @@ Install older docker **stable** release on your local centos server
   roles:
      - { role: gbolo.docker, docker_pkg_name: docker-engine-1.11.2 }
 ```
-Advanced Playbook with various variables applied
-```
+Advanced playbook with various variables applied
+```yaml
 - hosts: localhost
   vars:
     # store docker containers/images to /opt/docker
