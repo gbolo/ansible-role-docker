@@ -91,6 +91,28 @@ Install older docker **stable** release on your local centos server
   roles:
      - { role: gbolo.docker, docker_pkg_name: docker-engine-1.11.2 }
 ```
+Advanced Playbook with various variables applied
+```
+- hosts: localhost
+  vars:
+    # store docker containers/images to /opt/docker
+    docker_config_graph: /opt/docker
+    # change default docker bridge subnet
+    docker_config_bip: 172.16.77.77/24
+    # set default log driver to journald
+    docker_config_log_driver: journald
+    # use docker_config_custom to define additional settings not listed above
+    docker_config_custom:
+      # enable experimental mode
+      experimental: true
+      # set default search domains
+      dns-search:
+        - lab1.linuxctl.com
+        - lab2.linuxctl.com
+
+  roles:
+    - role: gbolo.docker
+```
 
 Author and License
 -------
