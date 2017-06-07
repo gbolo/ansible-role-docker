@@ -32,6 +32,15 @@ docker_service_enable: true
 ## name group for docker socket file
 docker_group: "docker"
 
+# Proxy related ----------------------------------------------------------------
+## should docker daemon use a proxy for outbound connections?
+docker_proxy_enabled: false
+## list of env variables we should set (comment out the ones you don't need)
+docker_proxy_env:
+  - "HTTP_PROXY=http://proxy.example.com:80/"
+  - "HTTP_PROXY=https://proxy.example.com:443/"
+  - "NO_PROXY=localhost,127.0.0.1,internalhub.example.com"
+
 # docker client configuration --------------------------------------------------
 ## enable authentication for docker registry
 docker_client_config_enabled: false
