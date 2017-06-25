@@ -31,6 +31,8 @@ docker_service_name: "docker"
 docker_service_enable: true
 ## name group for docker socket file
 docker_group: "docker"
+## should we install python-docker-py for ansible docker modules?
+docker_install_py_module: false
 
 # Proxy related ----------------------------------------------------------------
 ## should docker daemon use a proxy for outbound connections?
