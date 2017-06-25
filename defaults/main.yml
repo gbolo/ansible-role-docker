@@ -7,13 +7,17 @@ docker_repo_branch: "main"
 ## name of docker package to install
 docker_pkg_name: "docker-engine"
 ## state of package (present, latest, exc.)
-docker_pkg_state: present
+docker_pkg_state: "present"
 ## name of docker service
 docker_service_name: "docker"
 ## should docker daemon start on boot?
 docker_service_enable: true
 ## name group for docker socket file
 docker_group: "docker"
+## should we install python-docker-py for ansible docker modules?
+docker_install_py_module: false
+docker_py_pkg_name: "python-docker-py"
+docker_py_pkg_state: "latest"
 
 # Proxy related ----------------------------------------------------------------
 ## should docker daemon use a proxy for outbound connections?

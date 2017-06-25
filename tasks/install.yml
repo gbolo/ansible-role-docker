@@ -10,3 +10,11 @@
     name: "{{ docker_pkg_name }}"
     state: "{{ docker_pkg_state }}"
     disable_gpg_check: no
+
+- name: Install Docker Python Module
+  yum:
+    name: "{{ docker_py_pkg_name }}"
+    state: "{{ docker_py_pkg_state }}"
+    disable_gpg_check: no
+  when:
+    - docker_install_py_module
