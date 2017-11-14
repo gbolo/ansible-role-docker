@@ -2,10 +2,12 @@
 # OS related -------------------------------------------------------------------
 ## use official docker repository
 docker_repo_enabled: true
-## choose docker repo branch: main, experimental, testing
-docker_repo_branch: "main"
+## choose docker repo channel enable status
+docker_repo_channel_stable_enabled: true
+docker_repo_channel_edge_enabled: false
+docker_repo_channel_test_enabled: false
 ## name of docker package to install
-docker_pkg_name: "docker-engine"
+docker_pkg_name: "docker-ce"
 ## state of package (present, latest, exc.)
 docker_pkg_state: "present"
 ## name of docker service
@@ -39,6 +41,19 @@ docker_client_config_location: "/root/.docker/config.json"
 #    "https://test.tld:1234":
 #      auth: "SOME_STRING"
 #      email: "SOME_EMAIL"
+
+docker_login_config:
+  root:
+    - registry_url: reg.linuxctl.com
+      username: docker-ro
+      password: somepassword
+    - registry_url: reg2.linuxctl.com
+      username: docker-ro
+      password: somepassword
+  gbolo:
+    - registry_url: reg.linuxctl.com
+      username: docker-rw
+      password: somepassword
 
 # default dockerd configuration options ----------------------------------------
 ## https://docs.docker.com/engine/reference/commandline/dockerd/#/linux-configuration-file
