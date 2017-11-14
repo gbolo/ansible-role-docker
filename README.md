@@ -19,10 +19,12 @@ The following variables can be used to customize the docker installation:
 # OS related -------------------------------------------------------------------
 ## use official docker repository
 docker_repo_enabled: true
-## choose docker repo branch: main, experimental, testing
-docker_repo_branch: "main"
+## choose docker repo channel enable status
+docker_repo_channel_stable_enabled: true
+docker_repo_channel_edge_enabled: false
+docker_repo_channel_test_enabled: false
 ## name of docker package to install
-docker_pkg_name: "docker-engine"
+docker_pkg_name: "docker-ce"
 ## state of package (present, latest, exc.)
 docker_pkg_state: present
 ## name of docker service
@@ -90,11 +92,11 @@ Install latest docker **stable** release on your local centos server
   roles:
      - { role: gbolo.docker, docker_pkg_state: latest }
 ```
-Install latest docker **experimental** release on your local centos server
+Install latest docker **edge** release on your local centos server
 ```
 - hosts: localhost
   roles:
-     - { role: gbolo.docker, docker_pkg_state: latest, docker_repo_branch: experimental }
+     - { role: gbolo.docker, docker_pkg_state: latest, docker_repo_channel_edge_enabled: true }
 ```
 Install older docker **stable** release on your local centos server
 ```
