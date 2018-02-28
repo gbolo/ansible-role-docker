@@ -1,17 +1,17 @@
 ---
 
-- include: repo.yml
+- import_tasks: repo.yml
   tags:
     - "docker_repo"
 
-- include: install.yml
+- import_tasks: install.yml
   tags:
     - "docker_install"
 
-- include: config.yml
+- import_tasks: config.yml
   tags:
     - "docker_config"
 
-- include: service.yml
+- import_tasks: service.yml
   tags:
     - "docker_service"
