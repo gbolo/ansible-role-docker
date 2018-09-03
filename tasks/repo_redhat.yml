@@ -1,6 +1,6 @@
 ---
 
-- name: Install Official Docker Repositories
+- name: Install Official Docker Repositories (redhat)
   yum_repository:
     name: "docker-ce-{{ item.channel }}"
     description: Docker Repository Stable Channel
@@ -15,4 +15,5 @@
       enabled: "{{ docker_repo_channel_edge_enabled }}"
     - channel: test
       enabled: "{{ docker_repo_channel_test_enabled }}"
-  when: docker_repo_enabled
+  when:
+    - docker_repo_enabled

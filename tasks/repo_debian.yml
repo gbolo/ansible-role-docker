@@ -1,0 +1,19 @@
+---
+
+- name: Add Apt Signing Key (debian)
+  apt_key:
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    url: https://download.docker.com/linux/ubuntu/gpg
+  become: true
+  when:
+    - docker_repo_enabled
+
+- name: Install Official Docker Repositories (debian)
+  template:
+    src: apt_docker-ce.list.j2
+    dest: /etc/apt/sources.list.d/docker-ce.list
+    mode: 0644
+    owner: root
+    group: root
+  when:
+    - docker_repo_enabled

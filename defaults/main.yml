@@ -18,8 +18,10 @@ docker_service_enable: true
 docker_group: "docker"
 ## should we install python-docker-py for ansible docker modules?
 docker_install_py_module: false
-docker_py_pkg_name: "python-docker-py"
-docker_py_pkg_state: "latest"
+## python-docker pkg name and state are defaulted for each OS.
+## use options below if you wish to override them
+# docker_py_pkg_name: "python-docker-py"
+# docker_py_pkg_state: "latest"
 
 # Proxy related ----------------------------------------------------------------
 ## should docker daemon use a proxy for outbound connections?
@@ -42,23 +44,13 @@ docker_client_config_location: "/root/.docker/config.json"
 #      auth: "SOME_STRING"
 #      email: "SOME_EMAIL"
 
-docker_login_config:
-  root:
-    - registry_url: reg.linuxctl.com
-      username: docker-ro
-      password: somepassword
-    - registry_url: reg2.linuxctl.com
-      username: docker-ro
-      password: somepassword
-  gbolo:
-    - registry_url: reg.linuxctl.com
-      username: docker-rw
-      password: somepassword
-
 # default dockerd configuration options ----------------------------------------
 ## https://docs.docker.com/engine/reference/commandline/dockerd/#/linux-configuration-file
-docker_config_hosts:
-  - "unix:///var/run/docker.sock"
+
+## docker_config_hosts option removed because docker-ce packaging in ubuntu prevents this:
+## https://github.com/docker/docker-ce-packaging/pull/132
+# docker_config_hosts:
+#   - "unix:///var/run/docker.sock"
 docker_config_graph: "/var/lib/docker"
 docker_config_log_driver: ""
 docker_config_log_opts: {}
@@ -97,7 +89,9 @@ docker_config_common:
   "max-concurrent-downloads": "{{ docker_config_max_concurrent_downloads }}"
   "max-concurrent-uploads": "{{ docker_config_max_concurrent_uploads }}"
   "debug": "{{ docker_config_debug }}"
-  "hosts": "{{ docker_config_hosts }}"
+  ## hosts option removed in common because docker-ce packaging in ubuntu prevents this:
+  ## https://github.com/docker/docker-ce-packaging/pull/132
+  # "hosts": "{{ docker_config_hosts }}"
   "log-level": "{{ docker_config_log_level }}"
   "selinux-enabled": "{{ docker_config_selinux_enabled }}"
   "group": "{{ docker_config_group }}"

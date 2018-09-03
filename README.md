@@ -3,13 +3,17 @@ Docker - Ansible Role
 
 [![Build Status](https://travis-ci.org/gbolo/ansible-role-docker.svg?branch=master)](https://travis-ci.org/gbolo/ansible-role-docker)
 
-This role will fully configure and install [Docker](https://www.docker.com/) on RHEL/CentOS 7. In it's current form, **this role only supports docker versions 1.11+**.
+This role will fully configure and install [Docker](https://www.docker.com/) on the following platforms:
+ - RHEL/CentOS 7
+ - Debian/Ubuntu
+
+**this role only supports docker versions 1.11+**.
 
 Requirements
 ------------
 
-- OS: CentOS 7
-- Internet Connectivity
+- OS: CentOS 7 or Ubuntu
+- Connectivity to docker-ce package repository (https://download.docker.com)
 
 Role Variables
 --------------
@@ -59,8 +63,6 @@ docker_client_config_location: "/root/.docker/config.json"
 
 # default dockerd configuration options ----------------------------------------
 ## https://docs.docker.com/engine/reference/commandline/dockerd/#/linux-configuration-file
-docker_config_hosts:
-  - "unix:///var/run/docker.sock"
 docker_config_graph: "/var/lib/docker"
 docker_config_log_driver: ""
 docker_config_log_opts: {}
@@ -102,7 +104,7 @@ Install older docker **stable** release on your local centos server
 ```
 - hosts: localhost
   roles:
-     - { role: gbolo.docker, docker_pkg_name: docker-engine-1.11.2 }
+     - { role: gbolo.docker, docker_pkg_name: docker-ce-18.03.1.ce-1.el7.centos }
 ```
 Advanced playbook with various variables applied
 ```yaml
@@ -118,6 +120,10 @@ Advanced playbook with various variables applied
     docker_config_custom:
       # enable experimental mode
       experimental: true
+      # expose docker api over socket file and tcp
+      hosts:
+        - unix:///var/run/docker.sock
+        - tcp://0.0.0.0:2376
       # set default search domains
       dns-search:
         - lab1.linuxctl.com

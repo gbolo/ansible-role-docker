@@ -1,0 +1,12 @@
+# docker-ce apt repositories
+# managed via Ansible docker role: https://github.com/gbolo/ansible-role-docker
+
+{% if docker_repo_channel_stable_enabled %}
+deb [arch={{ docker_apt_arch | default('amd64') }}] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
+{% endif %}
+{% if docker_repo_channel_edge_enabled %}
+deb [arch={{ docker_apt_arch | default('amd64') }}] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} edge
+{% endif %}
+{% if docker_repo_channel_test_enabled %}
+deb [arch={{ docker_apt_arch | default('amd64') }}] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} test
+{% endif %}
