@@ -16,7 +16,7 @@
     dest: /etc/docker/daemon.json
     mode: 0400
     owner: root
-    group: "{{ docker_group }}"
+    group: root
   notify: restart docker
 
 # push client config if enabled
