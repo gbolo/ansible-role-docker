@@ -1,4 +1,5 @@
 ---
+
 # OS related -------------------------------------------------------------------
 ## use official docker repository
 docker_repo_enabled: true
@@ -78,14 +79,13 @@ docker_config_insecure_registries: []
 ##docker_config_tlscert: ""
 ##docker_config_tlskey: ""
 
-
 # ==============================================================================
 # dictionary of common configuration options  ----------------------------------
 # ==============================================================================
 docker_config_common:
   "log-driver": "{{ docker_config_log_driver }}"
   "log-opts": "{{ docker_config_log_opts }}"
-  "graph": "{{ docker_config_graph }}"
+  "data-root": "{{ docker_config_graph }}"
   "max-concurrent-downloads": "{{ docker_config_max_concurrent_downloads }}"
   "max-concurrent-uploads": "{{ docker_config_max_concurrent_uploads }}"
   "debug": "{{ docker_config_debug }}"

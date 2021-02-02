@@ -1,0 +1,45 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+  flake8 .
+
+platforms:
+  - name: dind
+    image: bodsch/molecule-dind:2101
+    docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+provisioner:
+  name: ansible
+  ansible_args:
+    - --diff
+    # - -vvv
+  config_options:
+    defaults:
+      deprecation_warnings: True
+      stdout_callback: yaml
+
+scenario:
+  test_sequence:
+    - lint
+    - destroy
+    - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    - verify
+    - destroy
+
+verifier:
+  name: testinfra

@@ -1,0 +1,18 @@
+---
+
+acme_sh_upgrade: true
+
+acme_sh_become_user: letsencrypt
+
+acme_sh_git_clone_dest: "/var/lib/{{ acme_sh_become_user }}/src/acme.sh"
+
+acme_sh_account_email: info@boone-schulz.de
+acme_sh_provider: standalone
+acme_sh_copy_certs_to_path: /etc/ssl/ansible
+
+acme_sh_domains:
+  - domains: []
+    staging: true
+    force_issue: true
+    webroot: /srv/www/letsencrypt
+    extra_flags_issue: '--keylength 4096'

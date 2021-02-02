@@ -42,7 +42,15 @@
     mode: 0750
     owner: root
     group: root
-  when: docker_proxy_enabled == true
+
+- name: create overwrite.conf
+  template:
+    src: overwrite.conf.j2
+    dest: "/etc/systemd/system/docker.service.d/overwrite.conf"
+    mode: 0640
+    owner: root
+    group: root
+  notify: reload systemd docker
 
 - name: add systemd dropin for proxy
   template:
