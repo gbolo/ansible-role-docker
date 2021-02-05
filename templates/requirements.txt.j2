@@ -1,0 +1,4 @@
+{% for k in docker_python_packages %}
+{{ k.name }}{% if k.version is defined %}>={{ k.version }}{% endif %}
+
+{% endfor %}

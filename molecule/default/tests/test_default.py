@@ -14,8 +14,6 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 
 def base_directory():
     cwd = os.getcwd()
-    pp.pprint(cwd)
-    pp.pprint(os.listdir(cwd))
 
     if('group_vars' in os.listdir(cwd)):
         directory = "../.."
@@ -34,15 +32,9 @@ def get_vars(host):
     """
     base_dir, molecule_dir = base_directory()
 
-    # pp.pprint(" => '{}' / '{}'".format(base_dir, molecule_dir))
-
     file_defaults = "file={}/defaults/main.yml name=role_defaults".format(base_dir)
     file_vars = "file={}/vars/main.yml name=role_vars".format(base_dir)
     file_molecule = "file={}/group_vars/all/vars.yml name=test_vars".format(molecule_dir)
-
-    # pp.pprint(file_defaults)
-    # pp.pprint(file_vars)
-    # pp.pprint(file_molecule)
 
     defaults_vars = host.ansible("include_vars", file_defaults).get("ansible_facts").get("role_defaults")
     vars_vars = host.ansible("include_vars", file_vars).get("ansible_facts").get("role_vars")
@@ -58,17 +50,19 @@ def get_vars(host):
     return result
 
 
-def test_user(host, get_vars):
-    user_name = get_vars.get('acme_sh_become_user')
-
-    assert host.group(user_name).exists
-    assert host.user(user_name).exists
-    assert user_name in host.user(user_name).groups
+@pytest.mark.parametrize("packages", [
+    "iptables",
+    "docker-ce",
+])
+def test_packages(host, packages):
+    """
+    """
+    p = host.package(packages)
+    assert p.is_installed
 
 
 @pytest.mark.parametrize("dirs", [
-    "/etc/ssl/ansible",
-    "/srv/www/letsencrypt/.well-known/acme-challenge"
+    "/etc/docker",
 ])
 def test_directories(host, dirs):
 
@@ -77,11 +71,20 @@ def test_directories(host, dirs):
     assert d.exists
 
 
-def test_files(host, get_vars):
-    user_name = get_vars.get('acme_sh_become_user')
+def test_listening_socket(host, get_vars):
 
-    file = "/var/lib/{user}/src/acme.sh/acme.sh".format(user=user_name)
+    socket_name = get_vars.get('docker_service_socket')
 
-    f = host.file(file)
-    assert f.exists
-    assert f.is_file
+    # for i in host.socket.get_listening_sockets():
+    #     pp.pprint(i)
+
+    socket = host.socket('unix://{}'.format(socket_name))
+
+    assert socket.is_listening
+
+
+def test_service_running_and_enabled(host):
+
+    service = host.service('docker')
+    assert service.is_running
+    assert service.is_enabled

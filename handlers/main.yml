@@ -1,10 +1,14 @@
 ---
 
-- name: restart docker
+- name: restart-docker
   service:
     name: docker
     state: restarted
 
-- name: systemctl daemon-reload
+- name: daemon-reload
   systemd:
     daemon_reload: true
+    force: true
+  notify: restart docker
+  when:
+    - ansible_service_mgr == 'systemd'

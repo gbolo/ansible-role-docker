@@ -1,0 +1,47 @@
+---
+
+- name: Remove default packaged docker
+  package:
+    name: [docker, docker-engine]
+    state: absent
+
+- name: Install Docker
+  package:
+    name: "{{ docker_pkg_name }}"
+    state: "{{ docker_pkg_state }}"
+    update_cache: true
+
+# - name: debain based
+#   block:
+#
+#     - name: Remove default debian packaged docker
+#       package:
+#         name: [docker, docker-engine]
+#         state: absent
+#
+#     # - name: Install Docker
+#     #   package:
+#     #     name: "{{ docker_pkg_name }}"
+#     #     state: "{{ docker_pkg_state }}"
+#     #     update_cache: true
+#
+#   when:
+#     - ansible_os_family | lower == 'debian'
+#
+# - name: redhat based
+#   block:
+#
+#     - name: Remove centos packaged docker
+#       package:
+#         name: docker
+#         state: absent
+#
+#     # - name: Install Docker
+#     #   package:
+#     #     name: "{{ docker_pkg_name }}"
+#     #     state: "{{ docker_pkg_state }}"
+#     #     disable_gpg_check: false
+#
+#
+#   when:
+#     - ansible_os_family | lower == 'redhat'

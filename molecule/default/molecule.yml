@@ -12,22 +12,56 @@ lint: |
   flake8 .
 
 platforms:
-  - name: dind
-    image: bodsch/molecule-dind:2101
+  - name: instance
+    image: "diodonfrost/ansible-${DISTRIBUTION:-debian:10}"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
     docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
     privileged: true
+    pre_build_image: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+  # - name: centos-8
+  #   image: paulfantom/centos-molecule:8
+  #   docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
+  #   privileged: true
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+  # - name: ubuntu-18
+  #   image: paulfantom/ubuntu-molecule:18.04
+  #   docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
+  #   privileged: true
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+  # - name: debian-9
+  #   image: paulfantom/debian-molecule:9
+  #   docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
+  #   privileged: true
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+  # - name: debain-10
+  #   image: paulfantom/debian-molecule:10
+  #   # image: "diodonfrost/ansible-${MOLECULE_DISTRIBUTION:-debian:10}"
+  #   docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
+  #   privileged: true
+  #   # capabilities:
+  #   #   - SYS_ADMIN
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
 provisioner:
   name: ansible
   ansible_args:
     - --diff
-    # - -vvv
+    # - -vv
   config_options:
     defaults:
       deprecation_warnings: True
       stdout_callback: yaml
+      remote_tmp: /tmp/ansible-${USER}
 
 scenario:
   test_sequence:

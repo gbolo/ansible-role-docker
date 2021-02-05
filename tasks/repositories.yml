@@ -1,0 +1,41 @@
+---
+
+- name: debain based
+  block:
+    - name: Add Apt Signing Key (debian)
+      apt_key:
+        id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+        url: https://download.docker.com/linux/ubuntu/gpg
+      become: true
+
+    - name: Install Official Docker Repositories (debian)
+      template:
+        src: apt_docker-ce.list.j2
+        dest: /etc/apt/sources.list.d/docker-ce.list
+        mode: 0644
+        owner: root
+        group: root
+
+  when:
+    - ansible_os_family | lower == 'debian'
+
+- name: redhat based
+  block:
+    - name: Install Official Docker Repositories (redhat)
+      yum_repository:
+        name: "docker-ce-{{ item.channel }}"
+        description: Docker Repository Stable Channel
+        baseurl: "https://download.docker.com/linux/centos/$releasever/$basearch/{{ item.channel }}"
+        gpgkey: https://download.docker.com/linux/centos/gpg
+        gpgcheck: true
+        enabled: "{{ item.enabled }}"
+      with_items:
+        - channel: stable
+          enabled: "{{ docker_repo_channel_stable_enabled }}"
+        - channel: nightly
+          enabled: "{{ docker_repo_channel_nightly_enabled }}"
+        - channel: test
+          enabled: "{{ docker_repo_channel_test_enabled }}"
+
+  when:
+    - ansible_os_family | lower == 'redhat'

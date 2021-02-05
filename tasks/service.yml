@@ -1,7 +1,8 @@
 ---
+
 - name: flush handlers at this point to avoid double restart
   meta: flush_handlers
-  
+
 - name: Ensure Docker is Running and Enabled
   service:
     name: "{{ docker_service_name }}"

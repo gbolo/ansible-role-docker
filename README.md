@@ -3,16 +3,22 @@ Docker - Ansible Role
 
 [![Build Status](https://travis-ci.org/gbolo/ansible-role-docker.svg?branch=master)](https://travis-ci.org/gbolo/ansible-role-docker)
 
+![CI](https://github.com/bodsch/ansible-role-docker/workflows/CI/badge.svg)
+
+---
+
 This role will fully configure and install [Docker](https://www.docker.com/) on the following platforms:
- - RHEL/CentOS 7
- - Debian/Ubuntu
+ - RHEL/CentOS 8
+ - OracleLinux 8
+ - Debian 9 and 10
+ - Ubuntu 18.04
 
 **this role only supports docker versions 1.11+**.
 
 Requirements
 ------------
 
-- OS: CentOS 7 or Ubuntu
+- OS: CentOS 8 or Ubuntu
 - Connectivity to docker-ce package repository (https://download.docker.com)
 
 Role Variables

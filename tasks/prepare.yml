@@ -1,0 +1,43 @@
+---
+
+- name: install docker dependencies
+  package:
+    name: "{{ docker_dependencies }}"
+    state: present
+
+- block:
+    - name: detect python3
+      stat:
+        path: /usr/bin/python3
+      register: _stat_present_python3
+      changed_when:
+        - not _stat_present_python3.stat.exists
+
+    - name: set ansible_python_interpreter for python3
+      set_fact:
+        ansible_python_interpreter: /usr/bin/python3
+      when:
+        - ansible_python.version.major == 2
+        - _stat_present_python3.stat.exists
+
+    - name: Gathering Facts now
+      setup:
+
+  when:
+    - ansible_os_family | lower == 'debian' or
+      ansible_distribution | lower == 'amazon'
+
+- name: create requirements.txt
+  template:
+    src: requirements.txt.j2
+    dest: /tmp/docker-requirements.txt
+    mode: 0660
+
+- name: install docker python packages
+  pip:
+    executable: pip3
+    requirements: /tmp/docker-requirements.txt
+    state: present
+  register: pip_install
+  ignore_errors: true
+  # no_log: true

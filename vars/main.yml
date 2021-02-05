@@ -1,2 +1,28 @@
 ---
-# vars file for docker
+
+_docker_dependencies:
+  default:
+    - python3-pip
+  debian:
+    - python3-pip
+    - net-tools
+  fedora:
+    - iptables
+  redhat:
+    - iptables
+    - iptables-ebtables
+
+docker_dependencies: "{{
+          _docker_dependencies[ansible_distribution | lower~ '-' ~ ansible_distribution_major_version] |
+  default(_docker_dependencies[ansible_distribution | lower] |
+  default(_docker_dependencies[ansible_os_family | lower~ '-' ~ ansible_distribution_major_version] |
+  default(_docker_dependencies[ansible_os_family | lower] |
+  default(_docker_dependencies['default'])))) }}"
+
+docker_python_packages:
+  - name: docker
+    version: 4.4.1
+  - name: docker-py
+    version: 1.10.6
+  - name: setuptools
+    version: 39.1.0

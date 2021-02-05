@@ -1,32 +1,20 @@
 ---
 
-- import_tasks: repo_redhat.yml
+- import_tasks: prepare.yml
+  tags:
+    - "docker_install"
+
+- import_tasks: repositories.yml
   tags:
     - "docker_repo"
   when:
     - docker_repo_enabled
-    - ansible_os_family == 'RedHat'
 
-- import_tasks: repo_debian.yml
-  tags:
-    - "docker_repo"
-  when:
-    - docker_repo_enabled
-    - ansible_os_family == 'Debian'
-
-- import_tasks: install_redhat.yml
+- import_tasks: install.yml
   tags:
     - "docker_install"
-  when:
-    - ansible_os_family == 'RedHat'
 
-- import_tasks: install_debian.yml
-  tags:
-    - "docker_install"
-  when:
-    - ansible_os_family == 'Debian'
-
-- import_tasks: config.yml
+- import_tasks: configure.yml
   tags:
     - "docker_config"
 
