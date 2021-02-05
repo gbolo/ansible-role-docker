@@ -59,6 +59,7 @@ class DockerCommonConfig(object):
         self.default_gateway = module.params.get("default_gateway")
         self.default_gateway_v6 = module.params.get("default_gateway_v6")
         self.insecure_registries = module.params.get("insecure_registries")
+        self.hosts = module.params.get("hosts")
         self.shutdown_timeout = module.params.get("shutdown_timeout")
 
         self.config_file = "/etc/docker/daemon.json"
@@ -164,6 +165,9 @@ class DockerCommonConfig(object):
         if(self.insecure_registries):
             data["insecure-registries"] = self.insecure_registries
 
+        if(self.hosts):
+            data["hosts"] = self.hosts
+
         if(self.shutdown_timeout):
             data["shutdown-timeout"] = self.shutdown_timeout
 
@@ -236,6 +240,7 @@ def main():
             default_gateway = dict(required=False, type='str'),
             default_gateway_v6 = dict(required=False, type='str'),
             insecure_registries = dict(required=False, type='list'),
+            hosts = dict(required=False, type='list'),
             shutdown_timeout = dict(required=False, type='int'),
         ),
         supports_check_mode = True,
