@@ -7,8 +7,6 @@
 - import_tasks: repositories.yml
   tags:
     - "docker_repo"
-  when:
-    - docker_repo_enabled
 
 - import_tasks: install.yml
   tags:

@@ -1,4 +1,4 @@
 [Service]
-{% for env in docker_proxy_env %}
+{% for env in docker_proxy.env %}
 Environment="{{ env }}"
 {% endfor %}

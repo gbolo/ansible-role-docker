@@ -31,11 +31,11 @@
         enabled: "{{ item.enabled }}"
       with_items:
         - channel: stable
-          enabled: "{{ docker_repo_channel_stable_enabled }}"
+          enabled: "{{ docker_repo.channel.stable_enabled }}"
         - channel: nightly
-          enabled: "{{ docker_repo_channel_nightly_enabled }}"
+          enabled: "{{ docker_repo.channel.nightly_enabled }}"
         - channel: test
-          enabled: "{{ docker_repo_channel_test_enabled }}"
+          enabled: "{{ docker_repo.channel.test_enabled }}"
 
   when:
     - ansible_os_family | lower == 'redhat'

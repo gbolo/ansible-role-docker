@@ -12,41 +12,51 @@
 - name: configure docker daemon.json
   docker_common_config:
     state: present
-    log_driver: "{{ docker_config_log_driver }}"
-    log_opts: "{{ docker_config_log_opts }}"
-    log_level: "{{ docker_config_log_level }}"
-    data_root: "{{ docker_config_data_root }}"
-    max_concurrent_downloads: "{{ docker_config_max_concurrent_downloads }}"
-    max_concurrent_uploads: "{{ docker_config_max_concurrent_uploads }}"
-    debug: "{{ docker_config_debug }}"
-    selinux_enabled: "{{ docker_config_selinux_enabled }}"
-    experimental: "{{ docker_config_experimental }}"
-    group: "{{ docker_config_group }}"
-    bridge: "{{ docker_config_bridge | default(omit) }}"
-    bip: "{{ docker_config_bip }}"
-    fixed_cidr: "{{ docker_config_fixed_cidr }}"
-    fixed_cidr_v6: "{{ docker_config_fixed_cidr_v6 }}"
-    default_gateway: "{{ docker_config_default_gateway }}"
-    default_gateway_v6: "{{ docker_config_default_gateway_v6 }}"
-    insecure_registries: "{{ docker_config_insecure_registries }}"
-    ip: "{{ docker_config_ip }}"
+    log_driver: "{{ docker_config.log_driver | default(omit) }}"
+    log_opts: "{{ docker_config.log_opts | default(omit) }}"
+    log_level: "{{ docker_config.log_level | default(omit) }}"
+    dns: "{{ docker_config.dns | default(omit) }}"
+    dns_opts: "{{ docker_config.dns_opts | default(omit) }}"
+    dns_search: "{{ docker_config.dns_search | default(omit) }}"
+    data_root: "{{ docker_config.data_root | default(omit) }}"
+    max_concurrent_downloads: "{{ docker_config.max_concurrent_downloads | default(omit) }}"
+    max_concurrent_uploads: "{{ docker_config.max_concurrent_uploads | default(omit) }}"
+    max_download_attempts: "{{ docker_config.max_download_attempts | default(omit) }}"
+    debug: "{{ docker_config.debug | default(omit) }}"
+    selinux_enabled: "{{ docker_config.selinux_enabled | default(omit) }}"
+    seccomp_profile: "{{ docker_config.seccomp_profile | default(omit) }}"
+    experimental: "{{ docker_config.experimental | default(omit) }}"
+    storage_driver: "{{ docker_config.storage_driver | default(omit) }}"
+    storage_opts: "{{ docker_config.storage_opts | default(omit) }}"
+    group: "{{ docker_config.group | default(omit) }}"
+    bridge: "{{ docker_config.bridge | default(omit) }}"
+    bip: "{{ docker_config.bip | default(omit) }}"
+    ip: "{{ docker_config.ip | default(omit) }}"
+    fixed_cidr: "{{ docker_config.fixed_cidr | default(omit) }}"
+    fixed_cidr_v6: "{{ docker_config.fixed_cidr_v6 | default(omit) }}"
+    default_gateway: "{{ docker_config.default_gateway | default(omit) }}"
+    default_gateway_v6: "{{ docker_config.default_gateway_v6 | default(omit) }}"
+    hosts: "{{ docker_config.hosts | default(omit) }}"
+    insecure_registries: "{{ docker_config.insecure_registries | default(omit) }}"
+    shutdown_timeout: "{{ docker_config.shutdown_timeout | default(omit) }}"
   register: _changed_docker_configuration
   notify: daemon-reload
 
 # push client config if enabled
-- name: create docker client config directory
-  file:
-    state: directory
-    path: "{{ docker_client_config_location | dirname }}"
-    mode: 0750
-  when: docker_client_config_enabled
+- block:
+    - name: create docker client config directory
+      file:
+        state: directory
+        path: "{{ docker_client_config.location | dirname }}"
+        mode: 0750
 
-- name: configure docker client config.json
-  template:
-    src: "config.json.j2"
-    dest: "{{ docker_client_config_location }}"
-    mode: 0440
-  when: docker_client_config_enabled
+    - name: configure docker client config.json
+      template:
+        src: "config.json.j2"
+        dest: "{{ docker_client_config.location }}"
+        mode: 0440
+
+  when: docker_client_config.enabled
 
 # configure proxy settings if enabled
 - name: create dropin directory
@@ -77,5 +87,5 @@
     mode: 0640
     owner: root
     group: root
-  when: docker_proxy_enabled
+  when: docker_proxy.enabled
   notify: daemon-reload

@@ -73,7 +73,7 @@ def test_directories(host, dirs):
 
 def test_listening_socket(host, get_vars):
 
-    socket_name = get_vars.get('docker_service_socket')
+    socket_name = get_vars.get('docker_containerd_socket')
 
     # for i in host.socket.get_listening_sockets():
     #     pp.pprint(i)
