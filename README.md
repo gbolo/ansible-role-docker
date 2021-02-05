@@ -137,7 +137,7 @@ Advanced playbook with various variables applied
 - hosts: localhost
   vars:
     # store docker containers/images to /opt/docker
-    docker_config.
+    docker_config:
       data_root: /opt/docker
       # change default docker bridge subnet
       bip: 172.16.77.77/24
