@@ -1,8 +1,6 @@
 Docker - Ansible Role
 =========
 
-[![Build Status](https://travis-ci.org/gbolo/ansible-role-docker.svg?branch=master)](https://travis-ci.org/gbolo/ansible-role-docker)
-
 ![CI](https://github.com/bodsch/ansible-role-docker/workflows/CI/badge.svg)
 
 ---
