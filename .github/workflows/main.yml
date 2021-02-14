@@ -16,32 +16,37 @@ defaults:
 
 jobs:
 
-  # lint:
-  #   name: Lint
-  #   runs-on: ubuntu-latest
-  #
-  #   steps:
-  #     - name: check out the codebase.
-  #       uses: actions/checkout@v2
-  #       with:
-  #         path: 'ansible-role-docker'
-  #
-  #     - name: set up python.
-  #       uses: actions/setup-python@v2
-  #       with:
-  #         python-version: '3.x'
-  #
-  #     - name: install test dependencies.
-  #       run: pip install -r test-requirements.txt
-  #
-  #     - name: Lint code.
-  #       run: |
-  #         yamllint .
-  #         ansible-lint .
-  #         flake8 .
+  lint:
+    name: Lint
+    runs-on: ubuntu-18.04
+    steps:
+      - name: check out the codebase.
+        uses: actions/checkout@v2
+        with:
+          path: 'ansible-role-docker'
 
-  tests:
+      - name: set up python.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: install dependencies.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip python3-setuptools
+          sudo pip3 install ansible ansible-lint yamllint flake8
+
+      - name: YAMLlint
+        run: yamllint .
+      - name: ansible-lint
+        run: ansible-lint .
+      - name: flake8
+        run: flake8 .
+
+  test:
     name: "${{ matrix.image }} / python: ${{ matrix.python-version }}, ansible: ${{ matrix.ansible-version }}"
+    needs:
+      - lint
     runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
@@ -81,4 +86,15 @@ jobs:
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          DISTRIBUTION:  ${{ matrix.image }}
+          DISTRIBUTION: ${{ matrix.image }}
+
+  publish:
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - test
+    runs-on: ubuntu-18.04
+    steps:
+      - name: galaxy
+        uses: robertdebock/galaxy-action@1.1.0
+        with:
+          galaxy_api_key: ${{ secrets.galaxy_api_key }}
