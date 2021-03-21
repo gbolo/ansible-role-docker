@@ -7,7 +7,8 @@
       - docker-engine
     state: absent
   when:
-    - not ansible_os_family | lower == 'archlinux'
+    - not (ansible_os_family | lower == 'archlinux' or
+           ansible_os_family | lower | replace(' ', '') == 'artixlinux')
 
 - name: Install Docker
   package:
