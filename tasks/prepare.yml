@@ -40,4 +40,4 @@
     state: present
   register: pip_install
   ignore_errors: true
-  # no_log: true
+  no_log: true

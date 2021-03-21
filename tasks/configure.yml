@@ -59,33 +59,36 @@
   when: docker_client_config.enabled
 
 # configure proxy settings if enabled
-- name: create dropin directory
-  file:
-    path: "/etc/systemd/system/docker.service.d"
-    state: "directory"
-    mode: 0750
-    owner: root
-    group: root
+- block:
+    - name: create dropin directory
+      file:
+        path: "/etc/systemd/system/docker.service.d"
+        state: "directory"
+        mode: 0750
+        owner: root
+        group: root
 
-- name: add systemd dropin to using configuration
-  template:
-    src: overwrite.conf.j2
-    dest: "/etc/systemd/system/docker.service.d/overwrite.conf"
-    mode: 0640
-    owner: root
-    group: root
-  notify: daemon-reload
+    - name: add systemd dropin to using configuration
+      template:
+        src: overwrite.conf.j2
+        dest: "/etc/systemd/system/docker.service.d/overwrite.conf"
+        mode: 0640
+        owner: root
+        group: root
+      notify: daemon-reload
+      when:
+        - _changed_docker_configuration is defined
+        - _changed_docker_configuration.changed is defined
+        - _changed_docker_configuration.changed
+
+    - name: add systemd dropin for proxy
+      template:
+        src: "proxy.conf.j2"
+        dest: "/etc/systemd/system/docker.service.d/proxy.conf"
+        mode: 0640
+        owner: root
+        group: root
+      when: docker_proxy.enabled
+      notify: daemon-reload
   when:
-    - _changed_docker_configuration is defined
-    - _changed_docker_configuration.changed is defined
-    - _changed_docker_configuration.changed
-
-- name: add systemd dropin for proxy
-  template:
-    src: "proxy.conf.j2"
-    dest: "/etc/systemd/system/docker.service.d/proxy.conf"
-    mode: 0640
-    owner: root
-    group: root
-  when: docker_proxy.enabled
-  notify: daemon-reload
+    - ansible_service_mgr == 'systemd'
