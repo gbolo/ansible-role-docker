@@ -50,15 +50,26 @@ def get_vars(host):
     return result
 
 
-@pytest.mark.parametrize("packages", [
-    "iptables",
-    "docker-ce",
-])
-def test_packages(host, packages):
+def test_packages(host):
     """
     """
-    p = host.package(packages)
-    assert p.is_installed
+    distribution = host.system_info.distribution
+    release = host.system_info.release
+
+    pp.pprint(distribution)
+    pp.pprint(release)
+
+    packages = []
+    packages.append("iptables")
+
+    if(distribution == 'arch'):
+        packages.append("docker")
+    else:
+        packages.append("docker-ce")
+
+    for package in packages:
+        p = host.package(package)
+        assert p.is_installed
 
 
 @pytest.mark.parametrize("dirs", [

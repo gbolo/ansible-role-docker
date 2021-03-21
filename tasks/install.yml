@@ -2,11 +2,15 @@
 
 - name: Remove default packaged docker
   package:
-    name: [docker, docker-engine]
+    name:
+      - docker
+      - docker-engine
     state: absent
+  when:
+    - not ansible_os_family | lower == 'archlinux'
 
 - name: Install Docker
   package:
-    name: docker-ce
+    name: "{{ docker_packages }}"
     state: "{{ docker_state }}"
     update_cache: true
