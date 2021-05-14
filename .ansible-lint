@@ -1,15 +1,12 @@
-
+---
 skip_list:
-  - yaml
-  - 'role-name'  # '106' Role name {} does not match ``^[a-z][a-z0-9_]+$`` pattern
-# '301' with 'no-changed-when'
-# '303' with 'command-instead-of-module'
-# '306' with 'risky-shell-pipe'
-# '305' with 'command-instead-of-shell'
+  - role-name
 
 exclude_paths:
   - .tox
   - .github
   - molecule
 
-listrules: True
+parseable: true
+quiet: true
+listrules: false

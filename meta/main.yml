@@ -1,6 +1,9 @@
 ---
 
 galaxy_info:
+  role_name: docker
+  namespace: bodsch
+
   author: George Bolo
   description: Role for Installation and Configuration of Docker
   company: linuxctl.com
