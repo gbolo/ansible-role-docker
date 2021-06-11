@@ -18,19 +18,26 @@ platforms:
     docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
     privileged: true
     pre_build_image: true
+    #capabilities:
+    #  - SYS_ADMIN
+    tmpfs:
+      - /run
+      - /tmp
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      # needs only by ubuntu 20.04
+      - /var/lib/docker/overlay2:/var/lib/docker/overlay2:rw
 
 provisioner:
   name: ansible
-  ansible_args:
-    - --diff
-    # - -vv
+  # ansible_args:
+  #   - --diff
+  #   - -v
   config_options:
     defaults:
       deprecation_warnings: True
       stdout_callback: yaml
-      remote_tmp: /tmp/ansible-${USER}
+      # remote_tmp: /tmp/ansible-${USER}
 
 scenario:
   test_sequence:

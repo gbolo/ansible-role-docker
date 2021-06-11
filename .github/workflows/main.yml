@@ -62,8 +62,10 @@ jobs:
           - debian:9
           - debian:10
           - ubuntu:18.04
+          - ubuntu:20.04
           - centos:8
           - oraclelinux:8
+          - archlinux:latest
         python-version:
           - '3.8'
           - '3.9'

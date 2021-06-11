@@ -1,6 +1,6 @@
 ---
 
-- name: Remove default packaged docker
+- name: remove default packaged docker
   package:
     name:
       - docker
@@ -10,8 +10,17 @@
     - not (ansible_os_family | lower == 'archlinux' or
            ansible_os_family | lower | replace(' ', '') == 'artixlinux')
 
-- name: Install Docker
+- name: install docker
   package:
     name: "{{ docker_packages }}"
     state: "{{ docker_state }}"
-    update_cache: true
+
+- name: ensure containerd is running and enabled on archlinux
+  service:
+    name: containerd
+    state: started
+    enabled: "{{ docker_service.enable }}"
+  when:
+    - ansible_os_family | lower == 'archlinux'
+
+...

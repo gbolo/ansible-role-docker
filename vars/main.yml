@@ -6,20 +6,26 @@ _docker_dependencies:
   debian:
     - python3-pip
     - net-tools
+  ubuntu-20:
+    - python3-pip
+    - net-tools
+    - kmod
   fedora:
     - iptables
   redhat:
     - iptables
     - iptables-ebtables
+  centos-7:
+    - iptables
   archlinux: []
   artixlinux: []
 
 docker_dependencies: "{{
-          _docker_dependencies[ansible_os_family | lower~ '-' ~ ansible_distribution_major_version] |
+          _docker_dependencies[ansible_distribution | lower~ '-' ~ ansible_distribution_major_version] |
+  default(_docker_dependencies[ansible_distribution | lower] |
+  default(_docker_dependencies[ansible_os_family | lower~ '-' ~ ansible_distribution_major_version] |
   default(_docker_dependencies[ansible_os_family | lower] |
   default(_docker_dependencies[ansible_os_family | lower | replace(' ', '') ] |
-  default(_docker_dependencies[ansible_distribution | lower~ '-' ~ ansible_distribution_major_version] |
-  default(_docker_dependencies[ansible_distribution | lower] |
   default(_docker_dependencies['default']))))) }}"
 
 _docker_packages:
@@ -37,13 +43,6 @@ docker_packages: "{{
   default(_docker_packages[ansible_distribution | lower~ '-' ~ ansible_distribution_major_version] |
   default(_docker_packages[ansible_distribution | lower] |
   default(_docker_packages['default']))))) }}"
-
-
-#           _docker_dependencies[ansible_distribution | lower~ '-' ~ ansible_distribution_major_version] |
-#   default(_docker_dependencies[ansible_distribution | lower] |
-#   default(_docker_dependencies[ansible_os_family | lower~ '-' ~ ansible_distribution_major_version] |
-#   default(_docker_dependencies[ansible_os_family | lower] |
-#   default(_docker_dependencies['default'])))) }}"
 
 docker_python_packages:
   - name: docker

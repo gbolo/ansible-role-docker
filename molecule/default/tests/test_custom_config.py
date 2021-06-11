@@ -50,7 +50,34 @@ def get_vars(host):
     return result
 
 
-def test_packages(host):
+def test_directories(host, get_vars):
+    """
+    """
+    docker_config = get_vars.get("docker_config")
+
+    if docker_config.get("data_root"):
+        data_root = docker_config.get("data_root")
+        d = host.file(data_root)
+        assert d.is_directory
+
+        docker_directories = [
+            'buildkit',
+            'containers',
+            'image',
+            'network',
+            'plugins',
+            'runtimes',
+            'swarm',
+            'tmp',
+            'trust',
+            'volumes']
+
+        for directory in docker_directories:
+            d = host.file(os.path.join(data_root, directory))
+            assert d.is_directory
+
+
+def test_listening_socket(host, get_vars):
     """
     """
     distribution = host.system_info.distribution
@@ -59,31 +86,21 @@ def test_packages(host):
     pp.pprint(distribution)
     pp.pprint(release)
 
-    packages = []
-    packages.append("iptables")
+    for i in host.socket.get_listening_sockets():
+        pp.pprint(i)
 
-    if(distribution == 'arch'):
-        packages.append("docker")
-    else:
-        packages.append("docker-ce")
+    docker_config = get_vars.get("docker_config")
 
-    for package in packages:
-        p = host.package(package)
-        assert p.is_installed
+    if docker_config.get("hosts"):
 
+        listeners = docker_config.get("hosts")
+        pp.pprint(listeners)
 
-@pytest.mark.parametrize("dirs", [
-    "/etc/docker",
-])
-def test_directories(host, dirs):
+        for socket in listeners:
+            pp.pprint(socket)
 
-    d = host.file(dirs)
-    assert d.is_directory
-    assert d.exists
+            if distribution == "ubuntu" and release == "18.04" and socket.startswith("unix"):
+                continue
 
-
-def test_service_running_and_enabled(host):
-
-    service = host.service('docker')
-    assert service.is_running
-    assert service.is_enabled
+            socket = host.socket(socket)
+            assert socket.is_listening

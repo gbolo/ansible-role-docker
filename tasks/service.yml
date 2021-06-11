@@ -3,16 +3,10 @@
 - name: flush handlers at this point to avoid double restart
   meta: flush_handlers
 
-- name: Ensure containerd is running and enabled
-  service:
-    name: containerd
-    state: started
-    enabled: "{{ docker_service.enable }}"
-  when:
-    - ansible_os_family | lower == 'archlinux'
-
-- name: Ensure {{ docker_service.name }} is running and enabled
+- name: ensure {{ docker_service.name }} is running and enabled
   service:
     name: "{{ docker_service.name }}"
     state: started
     enabled: "{{ docker_service.enable }}"
+
+...

@@ -1,5 +1,12 @@
 ---
 
+- name: start containerd
+  service:
+    name: containerd
+    state: started
+  when:
+    - ansible_os_family | lower == 'archlinux'
+
 - name: restart-docker
   service:
     name: docker
@@ -9,6 +16,6 @@
   systemd:
     daemon_reload: true
     force: true
-  notify: restart docker
+  # notify: restart docker
   when:
     - ansible_service_mgr == 'systemd'

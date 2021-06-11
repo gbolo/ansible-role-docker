@@ -1,5 +1,9 @@
 ---
 
+- name: update package cache
+  package:
+    update_cache: true
+
 - name: install docker dependencies
   package:
     name: "{{ docker_dependencies }}"
@@ -20,9 +24,8 @@
         - ansible_python.version.major == 2
         - _stat_present_python3.stat.exists
 
-    - name: Gathering Facts now
+    - name: gathering facts now
       setup:
-
   when:
     - ansible_os_family | lower == 'debian' or
       ansible_distribution | lower == 'amazon'
@@ -38,6 +41,8 @@
     executable: pip3
     requirements: /tmp/docker-requirements.txt
     state: present
-  register: pip_install
   ignore_errors: true
+  register: pip_install
   no_log: true
+
+...

@@ -9,6 +9,63 @@
     owner: root
     group: root
 
+# push client config if enabled
+- block:
+    - name: create docker client config directory
+      file:
+        state: directory
+        path: "{{ docker_client_config.location | dirname }}"
+        mode: 0750
+
+    - name: configure docker client config.json
+      template:
+        src: "config.json.j2"
+        dest: "{{ docker_client_config.location }}"
+        mode: 0440
+  when:
+    - docker_client_config.enabled
+
+# configure proxy settings if enabled
+- block:
+    - name: create dropin directory
+      file:
+        path: "/etc/systemd/system/docker.service.d"
+        state: "directory"
+        mode: 0750
+        owner: root
+        group: root
+
+    - name: add systemd dropin to using configuration
+      template:
+        src: overwrite.conf.j2
+        dest: "/etc/systemd/system/docker.service.d/overwrite.conf"
+        mode: 0644
+        owner: root
+        group: root
+      notify:
+        - daemon-reload
+      # when:
+      #   - _changed_docker_configuration is defined
+      #   - _changed_docker_configuration.changed is defined
+      #   - _changed_docker_configuration.changed
+
+    - name: add systemd dropin for proxy
+      template:
+        src: "proxy.conf.j2"
+        dest: "/etc/systemd/system/docker.service.d/proxy.conf"
+        mode: 0644
+        owner: root
+        group: root
+      notify:
+        - daemon-reload
+      when:
+        - docker_proxy.enabled
+  when:
+    - ansible_service_mgr == 'systemd'
+
+- name: flush handlers at this point to avoid double restart
+  meta: flush_handlers
+
 - name: configure docker daemon.json
   docker_common_config:
     state: present
@@ -39,56 +96,8 @@
     hosts: "{{ docker_config.hosts | default(omit) }}"
     insecure_registries: "{{ docker_config.insecure_registries | default(omit) }}"
     shutdown_timeout: "{{ docker_config.shutdown_timeout | default(omit) }}"
-  register: _changed_docker_configuration
-  notify: daemon-reload
+  # register: _changed_docker_configuration
+  notify:
+    - restart-docker
 
-# push client config if enabled
-- block:
-    - name: create docker client config directory
-      file:
-        state: directory
-        path: "{{ docker_client_config.location | dirname }}"
-        mode: 0750
-
-    - name: configure docker client config.json
-      template:
-        src: "config.json.j2"
-        dest: "{{ docker_client_config.location }}"
-        mode: 0440
-
-  when: docker_client_config.enabled
-
-# configure proxy settings if enabled
-- block:
-    - name: create dropin directory
-      file:
-        path: "/etc/systemd/system/docker.service.d"
-        state: "directory"
-        mode: 0750
-        owner: root
-        group: root
-
-    - name: add systemd dropin to using configuration
-      template:
-        src: overwrite.conf.j2
-        dest: "/etc/systemd/system/docker.service.d/overwrite.conf"
-        mode: 0640
-        owner: root
-        group: root
-      notify: daemon-reload
-      when:
-        - _changed_docker_configuration is defined
-        - _changed_docker_configuration.changed is defined
-        - _changed_docker_configuration.changed
-
-    - name: add systemd dropin for proxy
-      template:
-        src: "proxy.conf.j2"
-        dest: "/etc/systemd/system/docker.service.d/proxy.conf"
-        mode: 0640
-        owner: root
-        group: root
-      when: docker_proxy.enabled
-      notify: daemon-reload
-  when:
-    - ansible_service_mgr == 'systemd'
+...
