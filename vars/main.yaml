@@ -1,0 +1,12 @@
+---
+
+docker_packages:
+  - docker-ce
+
+docker_python_packages:
+  - name: docker
+    version: 4.4.1
+  # - name: docker-py
+  #   version: 1.10.6
+  - name: setuptools
+    version: 39.1.0

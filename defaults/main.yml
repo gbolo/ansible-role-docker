@@ -1,8 +1,5 @@
 ---
 
-# OS related -------------------------------------------------------------------
-## use official docker repository
-
 ## choose docker repo channel enable status
 docker_repo:
   channel:
@@ -24,13 +21,6 @@ docker_containerd_socket: /run/containerd/containerd.sock
 ## name group for docker socket file
 docker_group: "docker"
 
-## should we install python-docker-py for ansible docker modules?
-# docker_install_py_module: false
-
-## python-docker pkg name and state are defaulted for each OS.
-## use options below if you wish to override them
-# docker_py_pkg_name: "python-docker-py"
-# docker_py_pkg_state: "latest"
 
 # Proxy related ----------------------------------------------------------------
 
@@ -75,18 +65,18 @@ docker_config:
   max_concurrent_downloads: 3
   max_concurrent_uploads: 5
   debug: false
-  log_level: ""
-  bridge: ""
-  bip: "172.16.0.1/24"
-  fixed_cidr: "172.16.0.0/24"
-  fixed_cidr_v6: ""
-  default_gateway: ""
-  default_gateway_v6: ""
-  selinux_enabled: false
-  experimental: false
-  ip: "0.0.0.0"
-  group: "{{ docker_group }}"
-  insecure_registries: []
+  # log_level: ""
+  # bridge: ""
+  # bip: "172.16.0.1/24"
+  # fixed_cidr: "172.16.0.0/24"
+  # fixed_cidr_v6: ""
+  # default_gateway: ""
+  # default_gateway_v6: ""
+  # selinux_enabled: false
+  # experimental: false
+  # ip: "0.0.0.0"
+  # group: "{{ docker_group }}"
+  # insecure_registries: []
   # hosts:
   #   - "unix:///var/run/docker.sock"
   #   - tcp://0.0.0.0:2376
