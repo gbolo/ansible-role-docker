@@ -14,7 +14,7 @@ This role will fully configure and install [Docker](https://www.docker.com/).
 
 ## Requirements & Dependencies
 
-- Connectivity to docker-ce package repository (https://download.docker.com)
+- Connectivity to docker-ce package [repository](https://download.docker.com)
 
 ### Operating systems
 
