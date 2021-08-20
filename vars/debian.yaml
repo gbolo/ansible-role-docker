@@ -1,0 +1,8 @@
+---
+
+docker_dependencies:
+  - python3-pip
+  - net-tools
+  - iproute2
+
+...

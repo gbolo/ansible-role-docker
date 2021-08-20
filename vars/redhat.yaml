@@ -1,0 +1,8 @@
+---
+
+docker_dependencies:
+  - iproute
+  - iptables
+  - iptables-ebtables
+
+...

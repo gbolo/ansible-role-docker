@@ -1,4 +1,6 @@
 
+# Ansible Role:  `docker`
+
 This role will fully configure and install [Docker](https://www.docker.com/).
 
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bodsch/ansible-icinga2/CI)][ci]
@@ -18,10 +20,10 @@ This role will fully configure and install [Docker](https://www.docker.com/).
 
 Tested on
 
- - Debian 9 and 10
- - Ubuntu 18.04
- - CentOS 8
- - OracleLinux 8
+- Debian 9 / 10
+- Ubuntu 18.04 / 20.04
+- CentOS 8
+- OracleLinux 8
 
 **this role only supports docker versions 1.11+**.
 
@@ -30,7 +32,6 @@ Tested on
 The following variables can be used to customize the docker installation:
 
 ```yaml
-
 ## choose docker repo channel enable status
 docker_repo:
   channel:
@@ -52,10 +53,10 @@ docker_containerd_socket: /run/containerd/containerd.sock
 ## name group for docker socket file
 docker_group: "docker"
 ```
-### Proxy related 
+### Proxy related
 should docker daemon use a proxy for outbound connections?
 
-```
+```yaml
 docker_proxy:
   enabled: false
   ## list of env variables we should set (comment out the ones you don't need)
@@ -65,11 +66,11 @@ docker_proxy:
     - "NO_PROXY=localhost,127.0.0.1,internalhub.example.com"
 ```
 
-### docker client configuration 
+### docker client configuration
 
 enable authentication for docker registry
 
-```
+```yaml
 docker_client_config:
   enabled: false
   ## the location we should push client configuration
@@ -78,7 +79,7 @@ docker_client_config:
 
 #### for auth (docker login) use something like
 
-```
+```yaml
 docker_client_config:
   auths:
     "https://test.tld:1234":
@@ -88,9 +89,9 @@ docker_client_config:
 
 ### default dockerd configuration options
 
-https://docs.docker.com/engine/reference/commandline/dockerd/#/linux-configuration-file
+[configuration reference](https://docs.docker.com/engine/reference/commandline/dockerd/#/linux-configuration-file)
 
-```
+```yaml
 docker_config:
   data_root: "/var/lib/docker"
   log_driver: ""
@@ -119,7 +120,7 @@ docker_config:
 
 Install latest docker **stable** release on your local centos server
 
-```
+```yaml
 - hosts: localhost
   roles:
      - role: docker
@@ -127,7 +128,7 @@ Install latest docker **stable** release on your local centos server
 
 Install latest docker **edge** release on your local centos server
 
-```
+```yaml
 - hosts: localhost
   roles:
      - role: docker
@@ -137,7 +138,7 @@ Install latest docker **edge** release on your local centos server
 
 Install older docker **stable** release on your local centos server
 
-```
+```yaml
 - hosts: localhost
   roles:
      - role: docker
@@ -176,10 +177,10 @@ Advanced playbook with various variables applied
 ## Author and License
 
 - original `docker` role written by:
-    - George Bolo | [linuxctl.com](https://linuxctl.com)
+  - George Bolo | [linuxctl.com](https://linuxctl.com)
 
 - modified:
-    - Bodo Schulz
+  - Bodo Schulz
 
 ## License
 
