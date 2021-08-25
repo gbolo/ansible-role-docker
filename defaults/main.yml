@@ -21,6 +21,9 @@ docker_containerd_socket: /run/containerd/containerd.sock
 ## name group for docker socket file
 docker_group: "docker"
 
+docker_compose:
+  install: true
+  version: 1.29.2
 
 # Proxy related ----------------------------------------------------------------
 

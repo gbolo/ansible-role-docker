@@ -61,4 +61,18 @@
   register: pip_install
   no_log: true
 
+- name: merge docker_compose between defaults and custom
+  set_fact:
+    docker_compose: "{{ docker_compose_defaults |
+      combine( docker_compose, recursive=True ) }}"
+
+- name: detect installed docker_compose
+  stat:
+    path: "/usr/local/bin/docker-compose-{{ docker_compose.version }}"
+  register: stat_docker_compose_binary
+  when:
+    - docker_compose is defined
+    - docker_compose.install is defined
+    - docker_compose.install
+
 ...

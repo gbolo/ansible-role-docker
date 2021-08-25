@@ -6,7 +6,11 @@ docker_packages:
 docker_python_packages:
   - name: docker
     version: 4.4.1
-  # - name: docker-py
-  #   version: 1.10.6
   - name: setuptools
     version: 39.1.0
+
+docker_compose_defaults:
+  install: false
+  version: 1.29.2
+
+...

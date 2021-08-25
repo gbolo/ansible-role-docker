@@ -10,6 +10,8 @@ docker_config:
   hosts:
     - unix:///var/run/docker.sock
     - tcp://0.0.0.0:3485
+  # bip: "192.168.9.0/24"
+  fixed_cidr: "192.168.9.0/24"
   # set default search domains
   dns_search:
     - docker.local
@@ -20,4 +22,4 @@ docker_config:
   # authentication will be removed in the next release
   tls: false
   tlsverify: false
-  storage_driver: overlay2
+  # storage_driver: overlay2

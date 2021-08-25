@@ -4,6 +4,14 @@
   tags:
     - "docker_install"
 
+- import_tasks: compose.yaml
+  tags:
+    - "docker_compose"
+  when:
+    - docker_compose is defined
+    - docker_compose.install is defined
+    - docker_compose.install
+
 - import_tasks: repositories.yml
   tags:
     - "docker_repo"
