@@ -25,9 +25,9 @@ platforms:
       - /tmp
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - /lib/modules:/lib/modules:ro
+      - /lib/modules:/lib/modules:Z
       # needs only by ubuntu 20.04
-      - /var/lib/docker/overlay2:/var/lib/docker/overlay2:rw
+      - /var/lib/docker/overlay2:/var/lib/docker/overlay2:Z
 
 provisioner:
   name: ansible
