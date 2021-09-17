@@ -35,9 +35,9 @@
         owner: root
         group: root
 
-    - name: add systemd dropin to using configuration
+    - name: create systemd dropin to using configuration
       template:
-        src: overwrite.conf.j2
+        src: systemd/overwrite.conf.j2
         dest: "/etc/systemd/system/docker.service.d/overwrite.conf"
         mode: 0644
         owner: root
@@ -49,9 +49,9 @@
       #   - _changed_docker_configuration.changed is defined
       #   - _changed_docker_configuration.changed
 
-    - name: add systemd dropin for proxy
+    - name: create systemd dropin for proxy
       template:
-        src: "proxy.conf.j2"
+        src: "systemd/proxy.conf.j2"
         dest: "/etc/systemd/system/docker.service.d/proxy.conf"
         mode: 0644
         owner: root
@@ -62,6 +62,19 @@
         - docker_proxy.enabled
   when:
     - ansible_service_mgr == 'systemd'
+
+- block:
+    - name: create openrc config file
+      template:
+        src: openrc/conf.d/docker.j2
+        dest: /etc/conf.d/docker
+        mode: 0644
+        owner: root
+        group: root
+      notify:
+        - daemon-reload
+  when:
+    - ansible_service_mgr == 'openrc'
 
 - name: flush handlers at this point to avoid double restart
   meta: flush_handlers

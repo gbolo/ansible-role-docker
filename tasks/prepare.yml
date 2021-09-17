@@ -9,6 +9,8 @@
       files:
         # eg. debian-10 / ubuntu-20.04 / centos-8 / oraclelinux-8
         - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yaml"
+        # eg. archlinux-systemd / archlinux-openrc
+        - "{{ ansible_distribution | lower }}-{{ ansible_service_mgr | lower }}.yaml"
         # eg. debian / ubuntu / centos / oraclelinux
         - "{{ ansible_distribution | lower }}.yaml"
         # eg. redhat / debian

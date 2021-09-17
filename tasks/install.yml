@@ -22,5 +22,6 @@
     enabled: "{{ docker_service.enable }}"
   when:
     - ansible_os_family | lower == 'archlinux'
+    - ansible_service_mgr | lower == 'systemd'
 
 ...

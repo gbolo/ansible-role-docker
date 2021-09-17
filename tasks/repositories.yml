@@ -10,7 +10,7 @@
 
     - name: install official docker repositories for debian based
       template:
-        src: apt_docker-ce.list.j2
+        src: apt/docker-ce.list.j2
         dest: /etc/apt/sources.list.d/docker-ce.list
         mode: 0644
         owner: root
