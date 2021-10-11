@@ -9,6 +9,54 @@
     owner: root
     group: root
 
+- block:
+    # - name: ensure sers exists
+    #   getent:
+    #     database: passwd
+    #     key: "{{ item }}"
+    #     # split: ':'
+    #   # register: __getent
+    #   loop:
+    #     "{{ docker_users }}"
+    #   loop_control:
+    #     label: "username: {{ item }}"
+    #   ignore_errors: true
+    #
+    # - debug:
+    #     msg: # "{{ __getent | selectattr('getent_passwd') }}"
+    #       - "{{ docker_users }}"
+    #       - "{{ getent_passwd.keys()|list }}" ##[user.username]|join(':') }}"
+
+    - name: add users to docker group
+      user:
+        name: "{{ item }}"
+        groups: docker
+        append: true
+        state: present
+      loop:
+        "{{ docker_users }}"
+      loop_control:
+        label: "username: {{ item }}"
+      #when:
+      #  - __getent.exists
+
+    - name: sets ACL for docker_users on /var/run/docker.sock
+      acl:
+        path: /var/run/docker.sock
+        entity: "{{ item }}"
+        etype: user
+        permissions: rw
+        # default: yes
+        state: present
+      loop:
+        "{{ docker_users }}"
+      loop_control:
+        label: "username: {{ item }}"
+
+  when:
+    - docker_users is defined
+    - docker_users | count > 0
+
 # push client config if enabled
 - block:
     - name: create docker client config directory
@@ -92,6 +140,7 @@
     max_concurrent_downloads: "{{ docker_config.max_concurrent_downloads | default(omit) }}"
     max_concurrent_uploads: "{{ docker_config.max_concurrent_uploads | default(omit) }}"
     max_download_attempts: "{{ docker_config.max_download_attempts | default(omit) }}"
+    metrics_addr: "{{ docker_config.metrics_addr | default(omit) }}"
     debug: "{{ docker_config.debug | default(omit) }}"
     selinux_enabled: "{{ docker_config.selinux_enabled | default(omit) }}"
     seccomp_profile: "{{ docker_config.seccomp_profile | default(omit) }}"

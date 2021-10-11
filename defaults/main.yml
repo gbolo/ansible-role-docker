@@ -25,6 +25,14 @@ docker_compose:
   install: true
   version: 1.29.2
 
+docker_users: []
+
+docker_plugins: []
+# docker_plugins:
+#   - alias: loki
+#     source: grafana/loki-docker-driver:latest
+#     state: present
+
 # Proxy related ----------------------------------------------------------------
 
 ## should docker daemon use a proxy for outbound connections?

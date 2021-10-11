@@ -1,6 +1,7 @@
 ---
 
 docker_dependencies:
+  - acl
   - python3-pip
   - net-tools
   - iproute2

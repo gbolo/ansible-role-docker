@@ -28,10 +28,11 @@ class DockerCommonConfig(object):
     """
     module = None
 
-    def __init__(self):
+    def __init__(self, module):
         """
           Initialize all needed Variables
         """
+        self.module = module
         self.state = module.params.get("state")
         #
         self.log_driver = module.params.get("log_driver")
@@ -44,6 +45,7 @@ class DockerCommonConfig(object):
         self.max_concurrent_downloads = module.params.get("max_concurrent_downloads")
         self.max_concurrent_uploads = module.params.get("max_concurrent_uploads")
         self.max_download_attempts = module.params.get("max_download_attempts")
+        self.metrics_addr = module.params.get("metrics_addr")
         self.debug = module.params.get("debug")
         self.selinux_enabled = module.params.get("selinux_enabled")
         self.seccomp_profile = module.params.get("seccomp_profile")
@@ -119,6 +121,9 @@ class DockerCommonConfig(object):
 
         if(self.max_download_attempts):
             data["max-download-attempts"] = self.max_download_attempts
+
+        if(self.metrics_addr):
+            data["metrics-addr"] = self.metrics_addr
 
         if(self.debug):
             data["debug"] = self.debug
@@ -210,7 +215,6 @@ class DockerCommonConfig(object):
 #
 
 def main():
-    global module
     module = AnsibleModule(
         argument_spec = dict(
             state = dict(default="present", choices=["absent", "present"]),
@@ -225,6 +229,7 @@ def main():
             max_concurrent_downloads = dict(required=False, type="int"),
             max_concurrent_uploads = dict(required=False, type='int'),
             max_download_attempts = dict(required=False, type='int'),
+            metrics_addr = dict(required=False, type='str'),
             debug = dict(required=False, type="bool", default=False),
             selinux_enabled = dict(required=False, type="bool", default=False),
             seccomp_profile = dict(required=False, type='str'),
@@ -246,7 +251,7 @@ def main():
         supports_check_mode = True,
     )
 
-    dcc = DockerCommonConfig()
+    dcc = DockerCommonConfig(module)
     result = dcc.run()
 
     module.exit_json(**result)

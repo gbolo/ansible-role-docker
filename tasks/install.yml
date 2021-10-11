@@ -24,4 +24,23 @@
     - ansible_os_family | lower == 'archlinux'
     - ansible_service_mgr | lower == 'systemd'
 
+- name: install docker plugins
+  docker_plugins:
+    state: present
+    plugin_source: "{{ item.source }}"
+    plugin_version: "{{ item.version }}"
+    plugin_alias: "{{ item.alias }}"
+  # command: |
+  #   docker plugin install {{ item.source }} --alias {{ item.alias }} --grant-all-permissions
+  # args:
+  #   warn: false
+  loop: "{{ docker_plugins }}"
+  loop_control:
+    label: "{{ item.alias }}"
+  notify:
+    - restart-docker
+  when:
+    - docker_plugins is defined
+    - docker_plugins | count > 0
+
 ...
