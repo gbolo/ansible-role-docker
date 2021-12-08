@@ -21,6 +21,7 @@ docker_containerd_socket: /run/containerd/containerd.sock
 ## name group for docker socket file
 docker_group: "docker"
 
+## install docker-compose in version
 docker_compose:
   install: true
   version: 1.29.2

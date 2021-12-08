@@ -52,7 +52,17 @@ docker_containerd_socket: /run/containerd/containerd.sock
 
 ## name group for docker socket file
 docker_group: "docker"
+
+## install docker-compose in version
+docker_compose:
+  install: true
+  version: 1.29.2
+
+docker_users: []
+
+docker_plugins: []
 ```
+
 ### Proxy related
 should docker daemon use a proxy for outbound connections?
 
@@ -91,9 +101,43 @@ docker_client_config:
 
 [configuration reference](https://docs.docker.com/engine/reference/commandline/dockerd/#/linux-configuration-file)
 
+currently supported options:
+
+| options                    | type     | description       |
+| :-----                     | :----    | :-----            |
+| `log_driver`               | `string` | Default driver for container logs (default "json-file") |
+| `log_opts`                 | ``       | Default log driver options for containers (default map[]) |
+| `log_level`                | `string` | Set the logging level ("debug"|"info"|"warn"|"error"|"fatal") (default "info") |
+| `dns`                      | `list`   | DNS server to use (default [] ) |
+| `dns_opts`                 | `list`   | DNS options to use |
+| `dns_search`               | `list`   | DNS search domains to use |
+| `data_root`                | `string` | Root directory of persistent Docker state (default "/var/lib/docker") |
+| `max_concurrent_downloads` | `int`    | Set the max concurrent downloads for each pull (default 3) |
+| `max_concurrent_uploads`   | `int`    | Set the max concurrent uploads for each push (default 5) |
+| `max_download_attempts`    | `int`    | Set the max download attempts for each pull (default 5) |
+| `metrics_addr`             | `string` | Set default address and port to serve the metrics api on |
+| `debug`                    | `bool`   | Enable debug mode |
+| `selinux_enabled`          | `bool`   | Enable selinux support |
+| `seccomp_profile`          | `string` | Path to seccomp profile |
+| `experimental`             | `bool`   | Enable experimental features |
+| `storage_driver`           | `string` | Storage driver to use |
+| `storage_opts`             | `list`   | Storage driver options |
+| `group`                    | `group`  | Group for the unix socket (default "docker") |
+| `bridge`                   | `string` | Attach containers to a network bridge |
+| `bip`                      | `string` | Specify network bridge IP |
+| `ip`                       | `string` | Default IP when binding container ports (default 0.0.0.0) |
+| `fixed_cidr`               | `string` | IPv4 subnet for fixed IPs |
+| `fixed_cidr_v6`            | `string` | IPv6 subnet for fixed IPs |
+| `default_gateway`          | `string` | Container default gateway IPv4 address |
+| `default_gateway_v6`       | `string` | Container default gateway IPv6 address |
+| `hosts`                    | `list`   | Daemon socket(s) to connect to |
+| `insecure_registries`      | `list`   | Enable insecure registry communication |
+| `shutdown_timeout`         | `int`    | Set the default shutdown timeout (default 15) |
+
+
+
 ```yaml
 docker_config:
-  data_root: "/var/lib/docker"
   log_driver: ""
   log_opts: {}
   #  env: "os,customer"
@@ -115,6 +159,22 @@ docker_config:
   group: "{{ docker_group }}"
   insecure_registries: []
 ```
+
+### docker_users options
+
+planned
+
+### docker_plugins options
+
+To install, enable custom plugins
+
+```yaml
+docker_plugins:
+  - alias: loki
+    source: grafana/loki-docker-driver:latest
+    state: present
+```
+
 
 ## Examples
 
@@ -152,8 +212,8 @@ Advanced playbook with various variables applied
 ```yaml
 - hosts: localhost
   vars:
-    # store docker containers/images to /opt/docker
     docker_config:
+      # store docker containers/images to /opt/docker
       data_root: /opt/docker
       # change default docker bridge subnet
       bip: 172.16.77.77/24
@@ -169,6 +229,12 @@ Advanced playbook with various variables applied
       dns_search:
         - lab1.linuxctl.com
         - lab2.linuxctl.com
+      # configure logging options
+      log_opts:
+        "max-size": 10m
+        "max-file": "3"
+        labels: molecule
+        env: "os,customer"
 
   roles:
     - role: docker

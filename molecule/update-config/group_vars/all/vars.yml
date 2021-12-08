@@ -1,0 +1,25 @@
+---
+
+docker_config:
+  # data_root: /opt/docker
+  max_concurrent_downloads: 10
+  debug: false
+  # enable experimental mode
+  experimental: false
+  # expose docker api over socket file and tcp
+  hosts:
+    - unix:///var/run/docker.sock
+    - tcp://0.0.0.0:3485
+  # bip: "192.168.9.0/24"
+  fixed_cidr: "192.168.9.0/24"
+  # set default search domains
+  dns_search:
+    - docker.local
+  # Binding to IP address without --tlsverify is insecure and gives root access on this machine
+  # to everyone who has access to your network.
+  # Binding to an IP address without --tlsverify is deprecated
+  # Support for listening on TCP without authentication or explicit intent to run without
+  # authentication will be removed in the next release
+  tls: false
+  tlsverify: false
+  # storage_driver: overlay2

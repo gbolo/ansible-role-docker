@@ -16,6 +16,7 @@
   systemd:
     daemon_reload: true
     force: true
-  # notify: restart docker
   when:
     - ansible_service_mgr == 'systemd'
+
+...

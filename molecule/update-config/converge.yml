@@ -1,0 +1,46 @@
+---
+
+- name: converge
+  hosts: all
+  any_errors_fatal: false
+
+  environment:
+    NETRC: ''
+
+  roles:
+    - role: ansible-role-docker
+
+
+- name: update
+  hosts: all
+  any_errors_fatal: false
+
+  environment:
+    NETRC: ''
+
+  vars:
+    docker_config:
+      # data_root: /opt/docker
+      max_concurrent_downloads: 10
+      max_concurrent_uploads: 5
+      debug: false
+      # enable experimental mode
+      experimental: false
+      # expose docker api over socket file and tcp
+      hosts:
+        - unix:///var/run/docker.sock
+        - tcp://0.0.0.0:3485
+      fixed_cidr: "192.168.9.0/24"
+      # set default search domains
+      dns_search:
+        - docker.local
+      log_opts:
+        "max-size": 10m
+        "max-file": "3"
+        labels: molecule
+        env: "os,customer"
+
+  roles:
+    - role: ansible-role-docker
+
+...

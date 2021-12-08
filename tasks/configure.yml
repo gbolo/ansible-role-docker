@@ -10,7 +10,7 @@
     group: root
 
 - block:
-    # - name: ensure sers exists
+    # - name: ensure users exists
     #   getent:
     #     database: passwd
     #     key: "{{ item }}"
