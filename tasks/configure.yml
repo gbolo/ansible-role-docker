@@ -46,7 +46,6 @@
         entity: "{{ item }}"
         etype: user
         permissions: rw
-        # default: yes
         state: present
       loop:
         "{{ docker_users }}"
@@ -59,19 +58,15 @@
 
 # push client config if enabled
 - block:
-    - name: create docker client config directory
-      file:
-        state: directory
-        path: "{{ docker_client_config.location | dirname }}"
-        mode: 0750
-
-    - name: configure docker client config.json
-      template:
-        src: "config.json.j2"
-        dest: "{{ docker_client_config.location }}"
-        mode: 0440
+    - name: handle docker client configuration
+      include_tasks: client.yaml
+      loop: "{{ docker_client_config }}"
+      loop_control:
+        index_var: index
+        label: "username: {{ item.username }} - {{ item.location }}"
   when:
-    - docker_client_config.enabled
+    - docker_client_config is defined
+    - docker_client_config | count > 0
 
 # configure proxy settings if enabled
 - block:

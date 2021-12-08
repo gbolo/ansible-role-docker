@@ -1,1 +1,3 @@
-{{ docker_client_config | to_nice_json }}
+{
+  "auths": {{ item['auths'] | to_nice_json }}
+}

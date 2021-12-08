@@ -1,5 +1,28 @@
 ---
 
+## enable authentication for docker registry
+docker_client_config:
+  - username: docker
+    enabled: true
+    owner: "1000"
+    group: "1000"
+    ## the location we should push client configuration
+    location: "/root/.docker/config.json"
+    auths:
+      "https://test.tld:1234":
+        auth: "SOME_STRING"
+        email: "SOME_EMAIL"
+
+  - username: foo
+    enabled: false
+    owner: docker
+    group: docker
+    ## the location we should push client configuration
+    location: "/tmp/foo-config.json"
+    auths:
+      "https://test.tld:1234":
+        auth: "SOME_BASE64_STRING"
+
 docker_config:
   # data_root: /opt/docker
   max_concurrent_downloads: 10

@@ -1,0 +1,32 @@
+---
+
+- block:
+    - name: remove docker client config
+      file:
+        state: absent
+        path: "{{ item.location }}"
+  when:
+    - item.enabled is defined
+    - not item.enabled | default('false')
+
+- block:
+    - name: create docker client config directory
+      file:
+        state: directory
+        path: "{{ item.location | dirname }}"
+        owner: "{{ item.owner | default(omit) }}"
+        group: "{{ item.group | default(omit) }}"
+        mode: 0750
+
+    - name: configure docker client config.json
+      template:
+        src: "config.json.j2"
+        dest: "{{ item.location }}"
+        owner: "{{ item.owner | default(omit) }}"
+        group: "{{ item.group | default(omit) }}"
+        mode: 0440
+  when:
+    - item.enabled is defined
+    - item.enabled | default('false')
+
+...

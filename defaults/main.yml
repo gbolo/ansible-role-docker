@@ -23,7 +23,7 @@ docker_group: "docker"
 
 ## install docker-compose in version
 docker_compose:
-  install: true
+  install: false
   version: 1.29.2
 
 docker_users: []
