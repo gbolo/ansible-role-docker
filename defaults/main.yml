@@ -1,34 +1,32 @@
 ---
 
-## choose docker repo channel enable status
+## choose centos docker repo channel enable status
 docker_repo:
   channel:
     stable_enabled: true
     test_enabled: false
     nightly_enabled: false
 
-## state of package (present, absent, exc.)
-docker_state: "present"
+## state of package (present, absent, etc.)
+docker_state: present
 
 ## should docker daemon start on boot?
 docker_service:
   enable: true
   ## name of docker service
-  name: "docker"
-
-docker_containerd_socket: /run/containerd/containerd.sock
-
-## name group for docker socket file
-docker_group: "docker"
+  name: docker
 
 ## install docker-compose in version
-docker_compose:
-  install: false
-  version: 1.29.2
+docker_compose: {}
+# as example:
+# docker_compose:
+#   install: true
+#   version: 1.29.2
 
 docker_users: []
 
 docker_plugins: []
+# as example:
 # docker_plugins:
 #   - alias: loki
 #     source: grafana/loki-docker-driver:latest
@@ -48,55 +46,29 @@ docker_proxy:
 # docker client configuration --------------------------------------------------
 
 ## enable authentication for docker registry
-docker_client_config:
-  enabled: false
-  ## the location we should push client configuration
-  location: "/root/.docker/config.json"
-
-# for auth (docker login) use something like:
-#  docker_client_config:
-#    auths:
-#      "https://test.tld:1234":
-#        auth: "SOME_STRING"
-#        email: "SOME_EMAIL"
+docker_client_config: []
+# as example:
+# docker_client_config:
+#   - username: jenkins
+#     enabled: true
+#     owner: jenkins
+#     group: jeinkins
+#     ## the location we should push client configuration
+#     location: "/var/jenkins_home/.docker/config.json"
+#     auths:
+#       "https://harbor.deployment.tld":
+#         auth: "amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg=="
+#         email: "jenkins@deployment.tld"
 
 # default dockerd configuration options ----------------------------------------
 
-## https://docs.docker.com/engine/reference/commandline/dockerd/#/linux-configuration-file
-
-## docker_config_hosts option removed because docker-ce packaging in ubuntu prevents this:
-## https://github.com/docker/docker-ce-packaging/pull/132
-
+# for full doku, see: README.md
 docker_config:
   data_root: "/var/lib/docker"
   log_driver: ""
   log_opts: {}
-  #  env: "os,customer"
-  #  "max-file": "5"
-  #  "max-size": "10m"
   max_concurrent_downloads: 3
   max_concurrent_uploads: 5
   debug: false
-  # log_level: ""
-  # bridge: ""
-  # bip: "172.16.0.1/24"
-  # fixed_cidr: "172.16.0.0/24"
-  # fixed_cidr_v6: ""
-  # default_gateway: ""
-  # default_gateway_v6: ""
-  # selinux_enabled: false
-  # experimental: false
-  # ip: "0.0.0.0"
-  # group: "{{ docker_group }}"
-  # insecure_registries: []
-  # hosts:
-  #   - "unix:///var/run/docker.sock"
-  #   - tcp://0.0.0.0:2376
-  # disable tls for now because tlsverify option implemented strangely
-  # https://github.com/docker/docker/issues/27105
-  ## tls: ~
-  # broken if you specify anything but true for tlsverify
-  ## tlsverify: ~
-  ## tlscacert: ""
-  ## tlscert: ""
-  ## tlskey: ""
+
+...

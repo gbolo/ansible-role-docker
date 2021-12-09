@@ -1,0 +1,18 @@
+---
+
+- name: add users {{ item }} to docker group
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+    state: present
+
+- name: sets ACL for {{ item }} on /run/docker.sock
+  acl:
+    path: /run/docker.sock
+    entity: "{{ item }}"
+    etype: user
+    permissions: rw
+    state: present
+
+...

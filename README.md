@@ -24,6 +24,7 @@ Tested on
 - Ubuntu 18.04 / 20.04
 - CentOS 8
 - OracleLinux 8
+- ArchLinux
 
 **this role only supports docker versions 1.11+**.
 
@@ -32,31 +33,28 @@ Tested on
 The following variables can be used to customize the docker installation:
 
 ```yaml
-## choose docker repo channel enable status
+## choose centos docker repo channel enable status
 docker_repo:
   channel:
     stable_enabled: true
     test_enabled: false
     nightly_enabled: false
 
-## state of package (present, absent, exc.)
-docker_state: "present"
+## state of package (present, absent, etc.)
+docker_state: present
 
 ## should docker daemon start on boot?
 docker_service:
   enable: true
   ## name of docker service
-  name: "docker"
-
-docker_containerd_socket: /run/containerd/containerd.sock
-
-## name group for docker socket file
-docker_group: "docker"
+  name: docker
 
 ## install docker-compose in version
-docker_compose:
-  install: true
-  version: 1.29.2
+docker_compose: {}
+# as example:
+# docker_compose:
+#   install: true
+#   version: 1.29.2
 
 docker_users: []
 
@@ -78,24 +76,32 @@ docker_proxy:
 
 ### docker client configuration
 
-enable authentication for docker registry
+Enable authentication for the Docker Registry.
+
+Here it is possible to create a configuration for different users.
+
+The password stored here is base64 encoded and not encrypted!
+The creation of a corresponding string can be carried out as follows:
+
+```bash
+echo "jenkins$robot:rubbel-die-katz-du-dummschwätzer1" | base64
+amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg==
+```
 
 ```yaml
 docker_client_config:
-  enabled: false
-  ## the location we should push client configuration
-  location: "/root/.docker/config.json"
+  - username: jenkins
+    enabled: true
+    owner: jenkins
+    group: jeinkins
+    ## the location we should push client configuration
+    location: "/var/jenkins_home/.docker/config.json"
+    auths:
+      "https://harbor.deployment.tld":
+        auth: "amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg=="
+        email: "jenkins@deployment.tld"
 ```
 
-#### for auth (docker login) use something like
-
-```yaml
-docker_client_config:
-  auths:
-    "https://test.tld:1234":
-      auth: "SOME_STRING"
-      email: "SOME_EMAIL"
-```
 
 ### default dockerd configuration options
 
@@ -103,36 +109,36 @@ docker_client_config:
 
 currently supported options:
 
-| options                    | type     | description       |
-| :-----                     | :----    | :-----            |
-| `log_driver`               | `string` | Default driver for container logs (default "json-file") |
-| `log_opts`                 | ``       | Default log driver options for containers (default map[]) |
-| `log_level`                | `string` | Set the logging level ("debug"|"info"|"warn"|"error"|"fatal") (default "info") |
-| `dns`                      | `list`   | DNS server to use (default [] ) |
-| `dns_opts`                 | `list`   | DNS options to use |
-| `dns_search`               | `list`   | DNS search domains to use |
-| `data_root`                | `string` | Root directory of persistent Docker state (default "/var/lib/docker") |
-| `max_concurrent_downloads` | `int`    | Set the max concurrent downloads for each pull (default 3) |
-| `max_concurrent_uploads`   | `int`    | Set the max concurrent uploads for each push (default 5) |
-| `max_download_attempts`    | `int`    | Set the max download attempts for each pull (default 5) |
-| `metrics_addr`             | `string` | Set default address and port to serve the metrics api on |
-| `debug`                    | `bool`   | Enable debug mode |
-| `selinux_enabled`          | `bool`   | Enable selinux support |
-| `seccomp_profile`          | `string` | Path to seccomp profile |
-| `experimental`             | `bool`   | Enable experimental features |
-| `storage_driver`           | `string` | Storage driver to use |
-| `storage_opts`             | `list`   | Storage driver options |
-| `group`                    | `group`  | Group for the unix socket (default "docker") |
-| `bridge`                   | `string` | Attach containers to a network bridge |
-| `bip`                      | `string` | Specify network bridge IP |
-| `ip`                       | `string` | Default IP when binding container ports (default 0.0.0.0) |
-| `fixed_cidr`               | `string` | IPv4 subnet for fixed IPs |
-| `fixed_cidr_v6`            | `string` | IPv6 subnet for fixed IPs |
-| `default_gateway`          | `string` | Container default gateway IPv4 address |
-| `default_gateway_v6`       | `string` | Container default gateway IPv6 address |
-| `hosts`                    | `list`   | Daemon socket(s) to connect to |
-| `insecure_registries`      | `list`   | Enable insecure registry communication |
-| `shutdown_timeout`         | `int`    | Set the default shutdown timeout (default 15) |
+| options                    | type     | default           | description       |
+| :-----                     | :----    | :----             | :-----            |
+| `log_driver`               | `string` | `json-file`       | Default driver for container logs |
+| `log_opts`                 | `dict`   | `{}`              | Default log driver options for containers |
+| `log_level`                | `string` | `info`            | Set the logging level (`debug`,`info`,`warn`,`error`,`fatal`) |
+| `dns`                      | `list`   | `[]`              | DNS server to use |
+| `dns_opts`                 | `list`   | `[]`              | DNS options to use |
+| `dns_search`               | `list`   | `[]`              | DNS search domains to use |
+| `data_root`                | `string` | `/var/lib/docker` | Root directory of persistent Docker state |
+| `max_concurrent_downloads` | `int`    | `3`               | Set the max concurrent downloads for each pull |
+| `max_concurrent_uploads`   | `int`    | `5`               | Set the max concurrent uploads for each push |
+| `max_download_attempts`    | `int`    | `5`               | Set the max download attempts for each pull |
+| `metrics_addr`             | `string` | `-`               | Set default address and port to serve the metrics api on |
+| `debug`                    | `bool`   | `false`           | Enable debug mode |
+| `selinux_enabled`          | `bool`   | `false`           | Enable selinux support |
+| `seccomp_profile`          | `string` | `-`               | Path to seccomp profile |
+| `experimental`             | `bool`   | `false`           | Enable experimental features |
+| `storage_driver`           | `string` | `-`               | Storage driver to use |
+| `storage_opts`             | `list`   | `[]`              | Storage driver options |
+| `group`                    | `group`  | `docker`          | Group for the unix socket |
+| `bridge`                   | `string` | `-`               | Attach containers to a network bridge |
+| `bip`                      | `string` | `-`               | Specify network bridge IP |
+| `ip`                       | `string` | `0.0.0.0`         | Default IP when binding container ports |
+| `fixed_cidr`               | `string` | `-`               | IPv4 subnet for fixed IPs |
+| `fixed_cidr_v6`            | `string` | `-`               | IPv6 subnet for fixed IPs |
+| `default_gateway`          | `string` | `-`               | Container default gateway IPv4 address |
+| `default_gateway_v6`       | `string` | `-`               | Container default gateway IPv6 address |
+| `hosts`                    | `list`   | `[]`              | Daemon socket(s) to connect to |
+| `insecure_registries`      | `list`   | `[]`              | Enable insecure registry communication |
+| `shutdown_timeout`         | `int`    | `15`              | Set the default shutdown timeout |
 
 
 
@@ -162,11 +168,20 @@ docker_config:
 
 ### docker_users options
 
-planned
+Adds an **existing user** to the `docker` group.
+
+Furthermore, it tries to set the access rights to the docker socker by means of setfacl.
+
+```yaml
+docker_users:
+  - jenkins
+```
 
 ### docker_plugins options
 
-To install, enable custom plugins
+Install and activate custom plugins.
+
+(Currently only tested with [Loki](https://grafana.com/docs/loki/latest/clients/docker-driver/)!)
 
 ```yaml
 docker_plugins:
@@ -190,19 +205,12 @@ Install latest docker **edge** release on your local centos server
 
 ```yaml
 - hosts: localhost
+  vars:
+    docker_repo:
+      channel:
+        nightly_enabled: true
   roles:
      - role: docker
-       docker_pkg_state: latest
-       docker_repo_channel_edge_enabled: true
-```
-
-Install older docker **stable** release on your local centos server
-
-```yaml
-- hosts: localhost
-  roles:
-     - role: docker
-       docker_pkg_name: docker-ce-18.03.1.ce-1.el7.centos
 ```
 
 Advanced playbook with various variables applied
@@ -239,6 +247,7 @@ Advanced playbook with various variables applied
   roles:
     - role: docker
 ```
+---
 
 ## Author and License
 

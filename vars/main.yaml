@@ -13,4 +13,6 @@ docker_compose_defaults:
   install: false
   version: 1.29.2
 
+docker_containerd_socket: /run/containerd/containerd.sock
+
 ...

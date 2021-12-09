@@ -1,6 +1,5 @@
 ---
 
-## enable authentication for docker registry
 docker_client_config:
   - username: docker
     enabled: true
@@ -10,7 +9,7 @@ docker_client_config:
     location: "/root/.docker/config.json"
     auths:
       "https://test.tld:1234":
-        auth: "SOME_STRING"
+        auth: "SOME_BASE64_STRING"
         email: "SOME_EMAIL"
 
   - username: foo
