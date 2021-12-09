@@ -1,9 +1,5 @@
-# molecule==3.4.0
-# molecule-docker==0.2.4
-
 molecule
 molecule-docker
-
 docker==5.0.0
 yamllint==1.26.3
 flake8==3.9.2
