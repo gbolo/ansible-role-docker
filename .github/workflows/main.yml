@@ -31,7 +31,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_REGISTRY_TOKEN }}
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_ANSIBLE: true
-          VALIDATE_MARKDOWN: true
+          # VALIDATE_MARKDOWN: true
           VALIDATE_YAML: true
 
   arch:

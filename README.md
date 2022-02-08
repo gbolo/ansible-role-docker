@@ -28,7 +28,7 @@ Tested on
     - Alma Linux 8
     - Rocky Linux 8
     - OracleLinux 8
-- ArchLinux
+* ArchLinux
 
 **this role only supports docker versions 1.11+**.
 
