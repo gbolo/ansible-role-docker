@@ -47,7 +47,7 @@ jobs:
         python-version:
           - '3.9'
         ansible-version:
-          - '3.4.0'
+          - '4.1.0'
           - '5.1.0'
 
     steps:
@@ -91,7 +91,7 @@ jobs:
         python-version:
           - '3.9'
         ansible-version:
-          - '3.4.0'
+          - '4.1.0'
           - '5.1.0'
 
     steps:
@@ -135,7 +135,7 @@ jobs:
         python-version:
           - '3.9'
         ansible-version:
-          - '3.4.0'
+          - '4.1.0'
           - '5.1.0'
 
     steps:
