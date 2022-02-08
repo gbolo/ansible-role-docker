@@ -1,7 +1,7 @@
 
 # Ansible Role:  `docker`
 
-This role will fully configure and install [Docker](https://www.docker.com/).
+This role will fully configure and install [dockerd](https://www.docker.com/).
 
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bodsch/ansible-icinga2/CI)][ci]
 [![GitHub issues](https://img.shields.io/github/issues/bodsch/ansible-role-docker)][issues]
@@ -20,10 +20,14 @@ This role will fully configure and install [Docker](https://www.docker.com/).
 
 Tested on
 
-- Debian 9 / 10
-- Ubuntu 18.04 / 20.04
-- CentOS 8
-- OracleLinux 8
+* Debian based
+    - Debian 9 / 10 / 11
+    - Ubuntu 18.04 / 20.04
+* RedHat based
+    - CentOS 8 (**not longer supported**)
+    - Alma Linux 8
+    - Rocky Linux 8
+    - OracleLinux 8
 - ArchLinux
 
 **this role only supports docker versions 1.11+**.
