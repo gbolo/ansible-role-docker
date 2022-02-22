@@ -24,7 +24,7 @@
         dest: "{{ item.location }}"
         owner: "{{ item.owner | default(omit) }}"
         group: "{{ item.group | default(omit) }}"
-        mode: 0440
+        mode: 0666
       no_log: true
   when:
     - item.enabled is defined
