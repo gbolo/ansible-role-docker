@@ -1,9 +1,16 @@
 ---
+
 - name: prepare container
   hosts: all
   gather_facts: true
 
   pre_tasks:
+    - name: update pacman system
+      command: |
+        pacman --refresh --sync --sysupgrade --noconfirm
+      when:
+        - ansible_distribution | lower == 'archlinux'
+
     - debug:
         msg:
           - "os family            : {{ ansible_distribution }} ({{ ansible_os_family }})"
