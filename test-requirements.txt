@@ -1,5 +1,6 @@
-molecule
-molecule-docker
+ansible-lint==5.4.0
+molecule==3.4.0
+molecule-docker==0.2.4
 docker==5.0.0
 yamllint==1.26.3
 flake8==3.9.2
