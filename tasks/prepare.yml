@@ -61,7 +61,6 @@
     state: present
   ignore_errors: true
   register: pip_install
-  no_log: true
 
 - name: merge docker_compose between defaults and custom
   set_fact:

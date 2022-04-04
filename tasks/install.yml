@@ -30,10 +30,6 @@
     plugin_source: "{{ item.source }}"
     plugin_version: "{{ item.version }}"
     plugin_alias: "{{ item.alias }}"
-  # command: |
-  #   docker plugin install {{ item.source }} --alias {{ item.alias }} --grant-all-permissions
-  # args:
-  #   warn: false
   loop: "{{ docker_plugins }}"
   loop_control:
     label: "{{ item.alias }}"
