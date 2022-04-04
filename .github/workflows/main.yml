@@ -86,7 +86,6 @@ jobs:
         image:
           - debian:10
           - debian:11
-          - ubuntu:18.04
           - ubuntu:20.04
         python-version:
           - '3.9'
@@ -128,7 +127,6 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          # - centos:8
           - oraclelinux:8
           - rockylinux:8
           - almalinux:8

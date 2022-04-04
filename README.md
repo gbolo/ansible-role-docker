@@ -20,15 +20,14 @@ This role will fully configure and install [dockerd](https://www.docker.com/).
 
 Tested on
 
+* ArchLinux
 * Debian based
-    - Debian 9 / 10 / 11
-    - Ubuntu 18.04 / 20.04
+    - Debian 10 / 11
+    - Ubuntu 20.04
 * RedHat based
-    - CentOS 8 (**not longer supported**)
     - Alma Linux 8
     - Rocky Linux 8
     - OracleLinux 8
-* ArchLinux
 
 **this role only supports docker versions 1.11+**.
 
