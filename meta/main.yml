@@ -4,9 +4,8 @@ galaxy_info:
   role_name: docker
   namespace: bodsch
 
-  author: George Bolo
-  description: Role for Installation and Configuration of Docker
-  company: linuxctl.com
+  author: George Bolo / Bodo Schulz
+  description: install and configure docker on various linux systems
 
   # Some suggested licenses:
   # - BSD (default)
@@ -16,31 +15,23 @@ galaxy_info:
   # - Apache
   # - CC-BY
   license: MIT
-
   min_ansible_version: 2.9
 
   platforms:
-    - name: EL
-      versions:
-        - 8
-    - name: Ubuntu
-      versions:
-        #  18.04
-        - bionic
-        # 20.04
-        - focal
-    - name: GenericLinux
-      versions:
-        - all
-        - any
+    - name: ArchLinux
     - name: Debian
       versions:
-        # 9
-        - etch
         # 10
         - buster
         # 11
         - bullseye
+    - name: Ubuntu
+      versions:
+        # 20.04
+        - focal
+    - name: EL
+      versions:
+        - 8
 
   galaxy_tags:
     - docker

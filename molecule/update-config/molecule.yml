@@ -13,7 +13,7 @@ lint: |
 
 platforms:
   - name: instance
-    image: "diodonfrost/ansible-${DISTRIBUTION:-debian:10}"
+    image: "bodsch/ansible-${DISTRIBUTION:-debian:10}"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
     privileged: true
