@@ -1,6 +1,6 @@
 ---
 
-name: CI
+name: dockerd with installed plugin
 
 on:
   schedule:
@@ -56,7 +56,7 @@ jobs:
       - name: test with tox
         run: |
           tox -e ansible_$(printf "${{ matrix.ansible-version }}") \
-            -- molecule test --scenario-name default
+            -- molecule test --scenario-name dockerd-with-plugin
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
@@ -97,49 +97,7 @@ jobs:
       - name: test with tox
         run: |
           tox -e ansible_$(printf "${{ matrix.ansible-version }}") \
-            -- molecule test --scenario-name default
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          DISTRIBUTION: ${{ matrix.image }}
-
-  rpm:
-    name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}"
-    runs-on: ubuntu-20.04
-    if: ${{ github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        image:
-          - oraclelinux:8
-          - rockylinux:8
-          - almalinux:8
-        ansible-version:
-          - '4.10'
-          - '5.1'
-        scenario:
-          - default
-
-    steps:
-      - name: check out the codebase.
-        uses: actions/checkout@v2
-        with:
-          path: 'ansible-role-docker'
-
-      - name: 🐍 set up python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r test-requirements.txt
-
-      - name: test with tox
-        run: |
-          tox -e ansible_$(printf "${{ matrix.ansible-version }}") \
-            -- molecule test --scenario-name default
+            -- molecule test --scenario-name dockerd-with-plugin
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
