@@ -1,10 +1,12 @@
 ---
 
-- import_tasks: prepare.yml
+- name: prepare
+  import_tasks: prepare.yml
   tags:
     - "docker_install"
 
-- import_tasks: compose.yaml
+- name: compose
+  import_tasks: compose.yaml
   tags:
     - "docker_compose"
   when:
@@ -12,19 +14,31 @@
     - docker_compose.install is defined
     - docker_compose.install
 
-- import_tasks: repositories.yml
+- name: repositories
+  import_tasks: repositories.yml
   tags:
     - "docker_repo"
 
-- import_tasks: install.yml
+- name: install
+  import_tasks: install.yml
   tags:
     - "docker_install"
 
-- import_tasks: configure.yml
+- name: plugins
+  import_tasks: plugins.yml
+  when:
+    - docker_plugins is defined
+    - docker_plugins | count > 0
+  tags:
+    - "docker_plugins"
+
+- name: configure
+  import_tasks: configure.yml
   tags:
     - "docker_config"
 
-- import_tasks: service.yml
+- name: service
+  import_tasks: service.yml
   tags:
     - "docker_service"
 

@@ -2,6 +2,7 @@
 
 docker_dependencies:
   - iproute2
+  - python-pip
 
 docker_packages:
   - docker-openrc

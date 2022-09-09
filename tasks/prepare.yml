@@ -26,6 +26,9 @@
   package:
     name: "{{ docker_dependencies }}"
     state: present
+  when:
+    - docker_dependencies is defined
+    - docker_dependencies | count > 0
 
 - block:
     - name: detect python3

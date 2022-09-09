@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # (c) 2020, Bodo Schulz <bodo@boone-schulz.de>
@@ -71,14 +71,14 @@ class DockerCommonConfig(object):
         """
             run
         """
-        if(self.state == 'absent'):
+        if (self.state == 'absent'):
             """
                 remove created files
             """
-            if(os.path.isfile(self.config_file)):
+            if (os.path.isfile(self.config_file)):
                 os.remove(self.config_file)
 
-            if(os.path.isfile(self.config_checksum)):
+            if (os.path.isfile(self.config_checksum)):
                 os.remove(self.config_checksum)
 
             return dict(
@@ -92,99 +92,99 @@ class DockerCommonConfig(object):
 
         data = dict()
 
-        if(self.log_driver):
+        if (self.log_driver):
             data["log-driver"] = self.log_driver
 
-        if(self.log_opts):
+        if (self.log_opts):
             data["log-opts"] = self.log_opts
 
-        if(self.log_level):
+        if (self.log_level):
             data["log-level"] = self.log_level
 
-        if(self.dns):
+        if (self.dns):
             data["dns"] = self.dns
 
-        if(self.dns_opts):
+        if (self.dns_opts):
             data["dns-opts"] = self.dns_opts
 
-        if(self.dns_search):
+        if (self.dns_search):
             data["dns-search"] = self.dns_search
 
-        if(self.data_root):
+        if (self.data_root):
             data["data-root"] = self.data_root
 
-        if(self.max_concurrent_downloads):
+        if (self.max_concurrent_downloads):
             data["max-concurrent-downloads"] = self.max_concurrent_downloads
 
-        if(self.max_concurrent_uploads):
+        if (self.max_concurrent_uploads):
             data["max-concurrent-uploads"] = self.max_concurrent_uploads
 
-        if(self.max_download_attempts):
+        if (self.max_download_attempts):
             data["max-download-attempts"] = self.max_download_attempts
 
-        if(self.metrics_addr):
+        if (self.metrics_addr):
             data["metrics-addr"] = self.metrics_addr
 
-        if(self.debug):
+        if (self.debug):
             data["debug"] = self.debug
 
-        if(self.selinux_enabled):
+        if (self.selinux_enabled):
             data["selinux-enabled"] = self.selinux_enabled
 
-        if(self.seccomp_profile):
+        if (self.seccomp_profile):
             data["seccomp-profile"] = self.seccomp_profile
 
-        if(self.experimental):
+        if (self.experimental):
             data["experimental"] = self.experimental
 
-        if(self.storage_driver):
+        if (self.storage_driver):
             data["storage-driver"] = self.storage_driver
 
-        if(self.storage_opts):
+        if (self.storage_opts):
             data["storage-opts"] = self.storage_opts
 
-        if(self.group):
+        if (self.group):
             data["group"] = self.group
 
-        if(self.bridge):
+        if (self.bridge):
             data["bridge"] = self.bridge
 
-        if(self.bip):
+        if (self.bip):
             data["bip"] = self.bip
 
-        if(self.ip):
+        if (self.ip):
             data["ip"] = self.ip
 
-        if(self.fixed_cidr):
+        if (self.fixed_cidr):
             data["fixed-cidr"] = self.fixed_cidr
 
-        if(self.fixed_cidr_v6):
+        if (self.fixed_cidr_v6):
             data["fixed-cidr-v6"] = self.fixed_cidr_v6
 
-        if(self.default_gateway):
+        if (self.default_gateway):
             data["default-gateway"] = self.default_gateway
 
-        if(self.default_gateway_v6):
+        if (self.default_gateway_v6):
             data["default-gateway-v6"] = self.default_gateway_v6
 
-        if(self.insecure_registries):
+        if (self.insecure_registries):
             data["insecure-registries"] = self.insecure_registries
 
-        if(self.hosts):
+        if (self.hosts):
             data["hosts"] = self.hosts
 
-        if(self.shutdown_timeout):
+        if (self.shutdown_timeout):
             data["shutdown-timeout"] = self.shutdown_timeout
 
         # create checksum of our data
         _checksum = self.__checksum(json.dumps(data, sort_keys=True))
 
-        if(os.path.isfile(self.config_checksum)):
+        if (os.path.isfile(self.config_checksum)):
             with open(self.config_checksum, "r") as _sum:
                 _old_checksum = _sum.readlines()[0]
 
         # compare both checksums
-        if(_old_checksum != _checksum):
+        if (_old_checksum != _checksum):
             with open(self.config_file, 'w') as fp:
                 json.dump(data, fp, indent=2, sort_keys=False)
 

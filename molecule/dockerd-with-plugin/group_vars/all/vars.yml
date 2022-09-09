@@ -1,0 +1,55 @@
+---
+
+docker_plugins:
+  - alias: loki
+    source: grafana/loki-docker-driver
+    version: latest
+    state: present
+
+# docker_client_config:
+#   - username: docker
+#     enabled: true
+#     # owner: "1000"
+#     # group: "1000"
+#     ## the location we should push client configuration
+#     location: "/root/.docker/config.json"
+#     auths:
+#       registry.gitlab.com:
+#         # auth: U09NRV9CQVNFNjRfU1RSSU5HCg==
+#       # TODO
+#       # psFormat: '{% raw %}table {{.ID}}\t{{.Image}}\t{{.Command}}\t{{.Labels}}{% endraw %}'
+#       # imagesFormat: "{% raw %}table {{.ID}}\\t{{.Repository}}\\t{{.Tag}}\\t{{.CreatedAt}}{% endraw %}"
+#
+#   - username: foo
+#     enabled: false
+#     owner: docker
+#     group: docker
+#     ## the location we should push client configuration
+#     location: "/tmp/foo-config.json"
+#     auths:
+#       "test.tld":
+#         auth: "SOME_BASE64_STRING"
+
+docker_config:
+  # data_root: /opt/docker
+  max_concurrent_downloads: 10
+  debug: false
+  # enable experimental mode
+  experimental: false
+  # expose docker api over socket file and tcp
+  hosts:
+    - unix:///var/run/docker.sock
+    - tcp://0.0.0.0:3485
+  # bip: "192.168.9.0/24"
+  fixed_cidr: "192.168.9.0/24"
+  # set default search domains
+  dns_search:
+    - docker.local
+  # Binding to IP address without --tlsverify is insecure and gives root access on this machine
+  # to everyone who has access to your network.
+  # Binding to an IP address without --tlsverify is deprecated
+  # Support for listening on TCP without authentication or explicit intent to run without
+  # authentication will be removed in the next release
+  tls: false
+  tlsverify: false
+  # storage_driver: overlay2

@@ -16,7 +16,7 @@
         path: "{{ item.location | dirname }}"
         owner: "{{ item.owner | default(omit) }}"
         group: "{{ item.group | default(omit) }}"
-        mode: 0750
+        mode: 0770
 
     - name: "create docker client configuration {{ item.location }}"
       template:
@@ -24,7 +24,7 @@
         dest: "{{ item.location }}"
         owner: "{{ item.owner | default(omit) }}"
         group: "{{ item.group | default(omit) }}"
-        mode: 0666
+        mode: 0660
       no_log: true
   when:
     - item.enabled is defined

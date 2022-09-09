@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # (c) 2020, Bodo Schulz <bodo@boone-schulz.de>
@@ -6,6 +6,7 @@
 
 from __future__ import absolute_import, division, print_function
 import re
+import os
 import docker
 
 from ansible.module_utils.basic import AnsibleModule
@@ -38,18 +39,31 @@ class DockerPlugins():
         self.plugin_version = module.params.get("plugin_version")
         self.plugin_alias = module.params.get("plugin_alias")
 
+        self.docker_socket = "/var/run/docker.sock"
+
     def run(self):
         """
             run
         """
         docker_status = False
+        # TODO
+        # with broken ~/.docker/daemon.json will this fail!
         try:
-            client = docker.from_env()
-            docker_status = client.ping()
+            if os.path.exists(self.docker_socket):
+                # self.module.log("use docker.sock")
+                client = docker.DockerClient(base_url=f"unix://{self.docker_socket}")
+            else:
+                client = docker.from_env()
+        except docker.errors.APIError as e:
+          self.module.log(
+            msg=f" exception: {e}"
+          )
         except Exception as e:
             self.module.log(
-                msg=" exception: {} ({})".format(e, type(e))
+                msg=f" exception: {e}"
             )
+
+        docker_status = client.ping()
 
         if not docker_status:
             return dict(
@@ -60,42 +74,18 @@ class DockerPlugins():
 
         state, message = self.check_plugin()
 
-        if state:
+        if state or self.state == "test":
             return dict(
                 changed = False,
+                installed = True,
                 msg = message
             )
 
-        if(self.state == "absent"):
-            return dict(
-                changed = True,
-                failed = False,
-                msg = "plugin remove are not implemented yet"
-            )
+        if self.state == "absent":
+            return self.uninstall_plugin()
 
-        args = ["docker"]
-        args.append("plugin")
-        args.append("install")
-        args.append("{}:{}".format(self.plugin_source, self.plugin_version))
-        args.append("--alias")
-        args.append(self.plugin_alias)
-        args.append("--grant-all-permissions")
+        return self.install()
 
-        rc, out, err = self._exec(args)
-
-        if rc == 0:
-            return dict(
-                changed = True,
-                failed = False,
-                msg = "plugin {} succesfull installed".format(self.plugin_alias)
-            )
-        else:
-            return dict(
-                changed = False,
-                failed = True,
-                error = err,
-                msg = "plugin {} could not be installed".format(self.plugin_alias)
-            )
 
     def check_plugin(self):
         """
@@ -122,16 +112,53 @@ class DockerPlugins():
                 plugin = match.group("plugin")
                 version = match.group("version")
 
-                msg  = "plugin {} already in version '{}' installed".format(plugin, version)
+                msg  = f"plugin {plugin} already in version '{version}' installed"
                 return True, msg
 
-        msg = "plugin {} ist not installed".format(self.plugin_alias)
+        msg = f"plugin {self.plugin_alias} ist not installed"
         return False, msg
+
+    def install_plugin(self):
+        """
+        """
+        args = ["docker"]
+        args.append("plugin")
+        args.append("install")
+        args.append(f"{self.plugin_source}:{self.plugin_version}")
+        args.append("--alias")
+        args.append(self.plugin_alias)
+        args.append("--grant-all-permissions")
+
+        rc, out, err = self._exec(args)
+
+        if rc == 0:
+          return dict(
+            changed = True,
+            failed = False,
+            msg = f"plugin {self.plugin_alias} succesfull installed"
+          )
+        else:
+          return dict(
+            changed = False,
+            failed = True,
+            error = err,
+            msg = f"plugin {self.plugin_alias} could not be installed"
+          )
+
+    def uninstall_plugin(self):
+        """
+        """
+
+        return dict(
+          changed=True,
+          failed=False,
+          msg="plugin remove are not implemented yet"
+        )
 
     def _exec(self, cmd):
         """
         """
-        self.module.log(msg="cmd: {}".format(cmd))
+        self.module.log(msg=f"cmd: {cmd}")
 
         rc, out, err = self.module.run_command(cmd, check_rc=True)
         # self.module.log(msg="  rc : '{}'".format(rc))
@@ -149,7 +176,7 @@ def main():
         argument_spec = dict(
             state = dict(
                 default="present",
-                choices=["absent", "present"]
+                choices=["absent", "present", "test"]
             ),
             #
             plugin_source = dict(

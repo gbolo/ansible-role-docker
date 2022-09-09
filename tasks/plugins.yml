@@ -1,0 +1,31 @@
+---
+
+- name: test docker plugins
+  docker_plugins:
+    state: test
+    plugin_source: "{{ item.source }}"
+    plugin_version: "{{ item.version }}"
+    plugin_alias: "{{ item.alias }}"
+  loop: "{{ docker_plugins }}"
+  loop_control:
+    label: "{{ item.alias }}"
+  register: _plugin_state
+
+- name: ensure {{ docker_service.name }} is running
+  service:
+    name: "{{ docker_service.name }}"
+    state: started
+
+- name: install docker plugins
+  docker_plugins:
+    state: present
+    plugin_source: "{{ item.source }}"
+    plugin_version: "{{ item.version }}"
+    plugin_alias: "{{ item.alias }}"
+  loop: "{{ docker_plugins }}"
+  loop_control:
+    label: "{{ item.alias }}"
+  notify:
+    - restart-docker
+
+...
