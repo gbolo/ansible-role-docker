@@ -4,6 +4,11 @@
   gather_facts: true
 
   pre_tasks:
+
+    - name: update package cache
+      package:
+        update_cache: true
+
     - debug:
         msg:
           - "os family            : {{ ansible_distribution }} ({{ ansible_os_family }})"
