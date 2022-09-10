@@ -93,16 +93,52 @@ amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg==
 
 ```yaml
 docker_client_config:
-  - username: jenkins
-    enabled: true
-    owner: jenkins
-    group: jeinkins
-    ## the location we should push client configuration
-    location: "/var/jenkins_home/.docker/config.json"
+  ## the location we should push client configuration
+  - location: "/root/.docker/config.json"
+    enabled: false
     auths:
-      "https://harbor.deployment.tld":
-        auth: "amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg=="
-        email: "jenkins@deployment.tld"
+      registry.gitfoo.tld:
+        auth: amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg==
+```
+
+Alternatively, you can also enter your user name and password.
+The Ansible module will make a valid Base64 encoded string out of it.
+
+```yaml
+docker_client_config:
+    ## the location we should push client configuration
+  - location: "/var/tmp/foo/config.json"
+    enabled: false
+    auths:
+      "test.tld":
+        username: "FOO-was-sonst"
+        passwort: "ja-toll-schon-wieder-alles-scheisse!"
+```
+
+Since version 3.1.0 it is now also possible to configure the output format of `docker ps` or `docker image`.
+Here the fed parameters have to be defined as a list:
+
+```yaml
+docker_client_config:
+  ## the location we should push client configuration
+  - location: "/root/.docker/config.json"
+    enabled: false
+    auths:
+      registry.gitfoo.tld:
+        auth: amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg==
+    formats:
+      ps:
+        - ".ID"
+        - ".Names"
+        - ".Status"
+        - ".Labels"
+        - ".RunningFor"
+        - ".Ports"
+      images:
+        - ".ID"
+        - ".Repository"
+        - ".Tag"
+        - ".CreatedAt"
 ```
 
 
@@ -173,7 +209,7 @@ docker_config:
 
 Adds an **existing user** to the `docker` group.
 
-Furthermore, it tries to set the access rights to the docker socker by means of setfacl.
+Furthermore, it tries to set the access rights to the docker socker by means of `setfacl`.
 
 ```yaml
 docker_users:

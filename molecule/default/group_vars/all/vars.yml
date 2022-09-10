@@ -1,26 +1,33 @@
 ---
 
 docker_client_config:
-  - username: docker
-    enabled: true
-    owner: "1000"
-    group: "1000"
-    ## the location we should push client configuration
-    location: "/root/.docker/config.json"
-    auths:
-      "https://test.tld:1234":
-        auth: "SOME_BASE64_STRING"
-        email: "SOME_EMAIL"
-
-  - username: foo
+  ## the location we should push client configuration
+  - location: "/root/.docker/config.json"
     enabled: false
-    owner: docker
-    group: docker
-    ## the location we should push client configuration
-    location: "/tmp/foo-config.json"
     auths:
-      "https://test.tld:1234":
-        auth: "SOME_BASE64_STRING"
+      registry.gitfoo.tld:
+        auth: amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg==
+    formats:
+      ps:
+        - ".ID"
+        - ".Names"
+        - ".Status"
+        - ".Labels"
+        - ".RunningFor"
+        - ".Ports"
+      images:
+        - ".ID"
+        - ".Repository"
+        - ".Tag"
+        - ".CreatedAt"
+
+    ## the location we should push client configuration
+  - location: "/var/tmp/foo/config.json"
+    enabled: false
+    auths:
+      "test.tld":
+        username: "FOO-was-sonst"
+        passwort: "ja-toll-schon-wieder-alles-scheisse!"
 
 docker_config:
   # data_root: /opt/docker

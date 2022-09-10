@@ -23,7 +23,7 @@
   loop: "{{ docker_client_config }}"
   loop_control:
     index_var: index
-    label: "username: {{ item.username }} - {{ item.location }}"
+    label: "{{ item.location }}"
   when:
     - docker_client_config is defined
     - docker_client_config | count > 0

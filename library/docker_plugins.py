@@ -54,16 +54,16 @@ class DockerPlugins():
                 client = docker.DockerClient(base_url=f"unix://{self.docker_socket}")
             else:
                 client = docker.from_env()
+
+            docker_status = client.ping()
         except docker.errors.APIError as e:
-          self.module.log(
-            msg=f" exception: {e}"
-          )
+            self.module.log(
+                msg=f" exception: {e}"
+            )
         except Exception as e:
             self.module.log(
                 msg=f" exception: {e}"
             )
-
-        docker_status = client.ping()
 
         if not docker_status:
             return dict(
@@ -84,8 +84,7 @@ class DockerPlugins():
         if self.state == "absent":
             return self.uninstall_plugin()
 
-        return self.install()
-
+        return self.install_plugin()
 
     def check_plugin(self):
         """
@@ -132,27 +131,27 @@ class DockerPlugins():
         rc, out, err = self._exec(args)
 
         if rc == 0:
-          return dict(
-            changed = True,
-            failed = False,
-            msg = f"plugin {self.plugin_alias} succesfull installed"
-          )
+            return dict(
+                changed = True,
+                failed = False,
+                msg = f"plugin {self.plugin_alias} succesfull installed"
+            )
         else:
-          return dict(
-            changed = False,
-            failed = True,
-            error = err,
-            msg = f"plugin {self.plugin_alias} could not be installed"
-          )
+            return dict(
+                changed = False,
+                failed = True,
+                error = err,
+                msg = f"plugin {self.plugin_alias} could not be installed"
+            )
 
     def uninstall_plugin(self):
         """
         """
 
         return dict(
-          changed=True,
-          failed=False,
-          msg="plugin remove are not implemented yet"
+            changed=True,
+            failed=False,
+            msg="plugin remove are not implemented yet"
         )
 
     def _exec(self, cmd):

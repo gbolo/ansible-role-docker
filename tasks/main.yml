@@ -16,6 +16,8 @@
 
 - name: repositories
   import_tasks: repositories.yml
+  when:
+    - ansible_os_family | lower in ['debian', 'redhat']
   tags:
     - "docker_repo"
 
