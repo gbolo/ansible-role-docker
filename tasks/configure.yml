@@ -4,7 +4,7 @@
   file:
     path: /etc/docker
     state: directory
-    mode: 0600
+    mode: 0775
     owner: root
     group: root
 
