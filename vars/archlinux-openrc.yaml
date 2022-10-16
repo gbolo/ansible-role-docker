@@ -8,4 +8,7 @@ docker_packages:
   - docker
   - docker-openrc
 
+docker_containerd:
+  socket: /run/docker/containerd/containerd.sock
+
 ...

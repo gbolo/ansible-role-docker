@@ -118,19 +118,14 @@ def test_directories(host, get_vars):
 def test_listening_socket(host, get_vars):
     """
     """
-    distribution = host.system_info.distribution
-    release = host.system_info.release
-
-    pp.pprint(distribution)
-    pp.pprint(release)
-
     for i in host.socket.get_listening_sockets():
         pp.pprint(i)
 
+    distribution = host.system_info.distribution
+    release = host.system_info.release
     docker_config = get_vars.get("docker_config")
 
     if docker_config.get("hosts"):
-
         listeners = docker_config.get("hosts")
         pp.pprint(listeners)
 
