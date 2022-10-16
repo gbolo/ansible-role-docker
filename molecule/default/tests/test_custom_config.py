@@ -118,8 +118,10 @@ def test_directories(host, get_vars):
 def test_listening_socket(host, get_vars):
     """
     """
+    print(",----------------------------------------------")
     for i in host.socket.get_listening_sockets():
         pp.pprint(i)
+    print("`----------------------------------------------")
 
     distribution = host.system_info.distribution
     release = host.system_info.release
