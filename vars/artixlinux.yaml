@@ -5,7 +5,6 @@ docker_dependencies:
   - python-pip
 
 docker_packages:
-  - docker
   - docker-openrc
 
 ...

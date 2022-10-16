@@ -21,6 +21,7 @@ This role will fully configure and install [dockerd](https://www.docker.com/).
 Tested on
 
 * ArchLinux
+* ArtixLinux
 * Debian based
     - Debian 10 / 11
     - Ubuntu 20.04

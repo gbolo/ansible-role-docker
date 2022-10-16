@@ -15,12 +15,10 @@
         - "{{ ansible_distribution | lower }}.yaml"
         # eg. redhat / debian
         - "{{ ansible_os_family | lower }}.yaml"
+        # artixlinux
+        - "{{ ansible_os_family | lower | replace(' ', '') }}.yaml"
         - default.yaml
       skip: true
-
-# - name: update package cache
-#   package:
-#     update_cache: true
 
 - name: install docker dependencies
   ansible.builtin.package:

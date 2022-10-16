@@ -30,7 +30,7 @@ jobs:
       matrix:
         image:
           - archlinux:latest
-          # - artixlinux:latest
+          - artixlinux:latest
         ansible-version:
           - '5.1'
           - '6.1'
