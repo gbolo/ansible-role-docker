@@ -1,7 +1,7 @@
 ---
 
 - name: create docker config directory
-  file:
+  ansible.builtin.file:
     path: /etc/docker
     state: directory
     mode: 0775
@@ -9,7 +9,7 @@
     group: root
 
 - name: manage users for docker
-  include_tasks: users.yaml
+  ansible.builtin.include_tasks: users.yaml
   loop: "{{ docker_users }}"
   loop_control:
     index_var: index
@@ -19,7 +19,7 @@
     - docker_users | count > 0
 
 - name: manage docker client configuration
-  include_tasks: client.yaml
+  ansible.builtin.include_tasks: client.yaml
   loop: "{{ docker_client_config }}"
   loop_control:
     index_var: index
@@ -29,9 +29,12 @@
     - docker_client_config | count > 0
 
 # configure proxy settings if enabled
-- block:
+- name: configure systemd
+  when:
+    - ansible_service_mgr == 'systemd'
+  block:
     - name: create dropin directory
-      file:
+      ansible.builtin.file:
         path: "/etc/systemd/system/docker.service.d"
         state: "directory"
         mode: 0750
@@ -39,7 +42,7 @@
         group: root
 
     - name: create systemd dropin to using configuration
-      template:
+      ansible.builtin.template:
         src: systemd/overwrite.conf.j2
         dest: "/etc/systemd/system/docker.service.d/overwrite.conf"
         mode: 0644
@@ -49,7 +52,7 @@
         - daemon-reload
 
     - name: create systemd dropin for proxy
-      template:
+      ansible.builtin.template:
         src: "systemd/proxy.conf.j2"
         dest: "/etc/systemd/system/docker.service.d/proxy.conf"
         mode: 0644
@@ -59,11 +62,9 @@
         - daemon-reload
       when:
         - docker_proxy.enabled
-  when:
-    - ansible_service_mgr == 'systemd'
 
 - name: create openrc config file
-  template:
+  ansible.builtin.template:
     src: openrc/conf.d/docker.j2
     dest: /etc/conf.d/docker
     mode: 0644
@@ -75,7 +76,7 @@
     - ansible_service_mgr == 'openrc'
 
 - name: flush handlers at this point to avoid double restart
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: configure docker daemon.json
   docker_common_config:

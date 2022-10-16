@@ -1,12 +1,10 @@
 ---
 skip_list:
-  - role-name
+  # - fqcn[action-core]            # Use FQCN for builtin module actions
+  - fqcn[action]                 # Use FQCN for module actions, such `<namespace>.<collection>.docker_container`. (warning)
+  - name[casing]                 # All names should start with an uppercase letter. (warning)
+  - name[template]               # Jinja templates should only be at the end of 'name'
 
-exclude_paths:
-  - .tox
-  - .github
-  - molecule
-
-parseable: true
-quiet: true
-listrules: false
+  # - deprecated-command-syntax  # Using command rather than an argument to e.g. file
+  # - no-changed-when            # Commands should not change things if nothing needs doing
+  # - package-latest             # Package installs should not use latest

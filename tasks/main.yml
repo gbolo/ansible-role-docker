@@ -1,47 +1,47 @@
 ---
 
 - name: prepare
-  import_tasks: prepare.yml
+  ansible.builtin.import_tasks: prepare.yml
   tags:
-    - "docker_install"
+    - always
 
 - name: compose
-  import_tasks: compose.yaml
+  ansible.builtin.import_tasks: compose.yaml
   tags:
-    - "docker_compose"
+    - docker_compose
   when:
     - docker_compose is defined
     - docker_compose.install is defined
     - docker_compose.install
 
 - name: repositories
-  import_tasks: repositories.yml
+  ansible.builtin.import_tasks: repositories.yml
   when:
     - ansible_os_family | lower in ['debian', 'redhat']
   tags:
-    - "docker_repo"
+    - docker_repo
 
 - name: install
-  import_tasks: install.yml
+  ansible.builtin.import_tasks: install.yml
   tags:
-    - "docker_install"
+    - docker_install
 
 - name: plugins
-  import_tasks: plugins.yml
+  ansible.builtin.import_tasks: plugins.yml
   when:
     - docker_plugins is defined
     - docker_plugins | count > 0
   tags:
-    - "docker_plugins"
+    - docker_plugins
 
 - name: configure
-  import_tasks: configure.yml
+  ansible.builtin.import_tasks: configure.yml
   tags:
-    - "docker_config"
+    - docker_config
 
 - name: service
-  import_tasks: service.yml
+  ansible.builtin.import_tasks: service.yml
   tags:
-    - "docker_service"
+    - docker_service
 
 ...

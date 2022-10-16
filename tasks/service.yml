@@ -1,10 +1,10 @@
 ---
 
 - name: flush handlers at this point to avoid double restart
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: ensure {{ docker_service.name }} is running and enabled
-  service:
+  ansible.builtin.service:
     name: "{{ docker_service.name }}"
     state: started
     enabled: "{{ docker_service.enable }}"

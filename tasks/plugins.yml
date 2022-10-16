@@ -1,7 +1,7 @@
 ---
 
 - name: ensure {{ docker_service.name }} is running
-  service:
+  ansible.builtin.service:
     name: "{{ docker_service.name }}"
     state: started
 
