@@ -1,12 +1,16 @@
 ---
 
-- block:
+- name: download and install docker compose
+  when:
+    - not stat_docker_compose_binary.stat.exists
+  block:
     - name: download docker_compose archive to local folder
       become: false
       delegate_to: localhost
-      get_url:
+      ansible.builtin.get_url:
         url: "https://github.com/docker/compose/releases/download/{{ docker_compose.version }}/docker-compose-Linux-x86_64"
         dest: "/tmp/docker-compose-{{ docker_compose.version }}"
+        mode: 0640
       register: _download_archive
       until: _download_archive is succeeded
       retries: 5
@@ -14,17 +18,15 @@
       check_mode: false
 
     - name: propagate docker_compose
-      copy:
+      ansible.builtin.copy:
         src: "/tmp/docker-compose-{{ docker_compose.version }}"
         dest: "/usr/local/bin/"
         mode: 0755
         owner: root
         group: root
-  when:
-    - not stat_docker_compose_binary.stat.exists
 
 - name: create link from docker_compose_{{ docker_compose.version }}
-  file:
+  ansible.builtin.file:
     src: "/usr/local/bin/docker-compose-{{ docker_compose.version }}"
     dest: "/usr/local/bin/docker-compose"
     state: link

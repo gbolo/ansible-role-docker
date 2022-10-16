@@ -1,19 +1,19 @@
 ---
 
 - name: start containerd
-  service:
+  ansible.builtin.service:
     name: containerd
     state: started
   when:
     - ansible_os_family | lower == 'archlinux'
 
 - name: restart-docker
-  service:
+  ansible.builtin.service:
     name: docker
     state: restarted
 
 - name: daemon-reload
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     force: true
   when:

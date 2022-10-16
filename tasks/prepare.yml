@@ -1,7 +1,7 @@
 ---
 
 - name: include OS specific configuration ({{ ansible_distribution }} ({{ ansible_os_family }}) {{ ansible_distribution_major_version }})
-  include_vars: "{{ lookup('first_found', params) }}"
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
   vars:
     params:
       paths:
@@ -23,7 +23,7 @@
 #     update_cache: true
 
 - name: install docker dependencies
-  package:
+  ansible.builtin.package:
     name: "{{ docker_dependencies }}"
     state: present
   when:
@@ -52,13 +52,13 @@
 #       ansible_distribution | lower == 'amazon'
 
 - name: create requirements.txt
-  template:
+  ansible.builtin.template:
     src: requirements.txt.j2
     dest: /tmp/docker-requirements.txt
     mode: 0660
 
 - name: install docker python packages
-  pip:
+  ansible.builtin.pip:
     executable: pip3
     requirements: /tmp/docker-requirements.txt
     state: present
@@ -66,12 +66,11 @@
   register: pip_install
 
 - name: merge docker_compose between defaults and custom
-  set_fact:
-    docker_compose: "{{ docker_compose_defaults |
-      combine( docker_compose, recursive=True ) }}"
+  ansible.builtin.set_fact:
+    docker_compose: "{{ docker_compose_defaults | combine(docker_compose, recursive=True) }}"
 
 - name: detect installed docker_compose
-  stat:
+  ansible.builtin.stat:
     path: "/usr/local/bin/docker-compose-{{ docker_compose.version }}"
   register: stat_docker_compose_binary
   when:
