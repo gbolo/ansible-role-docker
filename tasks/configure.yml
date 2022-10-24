@@ -88,14 +88,14 @@
     dns_opts: "{{ docker_config.dns_opts | default(omit) }}"
     dns_search: "{{ docker_config.dns_search | default(omit) }}"
     data_root: "{{ docker_config.data_root | default(omit) }}"
-    max_concurrent_downloads: "{{ docker_config.max_concurrent_downloads | default(omit) }}"
-    max_concurrent_uploads: "{{ docker_config.max_concurrent_uploads | default(omit) }}"
-    max_download_attempts: "{{ docker_config.max_download_attempts | default(omit) }}"
+    max_concurrent_downloads: "{{ docker_config.max_concurrent_downloads | int | default(omit) }}"
+    max_concurrent_uploads: "{{ docker_config.max_concurrent_uploads | int | default(omit) }}"
+    max_download_attempts: "{{ docker_config.max_download_attempts | int | default(omit) }}"
     metrics_addr: "{{ docker_config.metrics_addr | default(omit) }}"
-    debug: "{{ docker_config.debug | default(omit) }}"
-    selinux_enabled: "{{ docker_config.selinux_enabled | default(omit) }}"
+    debug: "{{ docker_config.debug | default('false') | bool }}"
+    selinux_enabled: "{{ docker_config.selinux_enabled | default('false') | bool }}"
     seccomp_profile: "{{ docker_config.seccomp_profile | default(omit) }}"
-    experimental: "{{ docker_config.experimental | default(omit) }}"
+    experimental: "{{ docker_config.experimental | default('false') | bool }}"
     storage_driver: "{{ docker_config.storage_driver | default(omit) }}"
     storage_opts: "{{ docker_config.storage_opts | default(omit) }}"
     group: "{{ docker_config.group | default(omit) }}"
@@ -108,9 +108,14 @@
     default_gateway_v6: "{{ docker_config.default_gateway_v6 | default(omit) }}"
     hosts: "{{ docker_config.hosts | default(omit) }}"
     insecure_registries: "{{ docker_config.insecure_registries | default(omit) }}"
-    shutdown_timeout: "{{ docker_config.shutdown_timeout | default(omit) }}"
-  # register: _changed_docker_configuration
+    shutdown_timeout: "{{ docker_config.shutdown_timeout | int | default(omit) }}"
+    tls_verify: "{{ docker_config.tls.verify | default('false') | bool }}"
+    tls_ca_cert: "{{ docker_config.tls.ca_cert | default(omit) }}"
+    tls_cert: "{{ docker_config.tls.cert | default(omit) }}"
+    tls_key: "{{ docker_config.tls.key | default(omit) }}"
+  register: _changed_docker_configuration
   notify:
+    - information about config changes
     - restart-docker
 
 ...

@@ -1,4 +1,10 @@
+{{ ansible_managed | comment }}
 
 [Service]
-ExecStart=
-ExecStart=/usr/bin/dockerd --containerd={{ docker_containerd.socket }}
+
+EnvironmentFile   = {{ docker_defaults_directory }}/docker
+ExecStart         =
+ExecStart         =/usr/bin/dockerd $OPTIONS
+# --containerd={{ docker_containerd.socket }}
+
+SyslogIdentifier  = docker

@@ -1,0 +1,45 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
+
+# Docker Upstart and SysVinit configuration file
+
+#
+# THIS FILE DOES NOT APPLY TO SYSTEMD
+#
+#   Please see the documentation for "systemd drop-ins":
+#   https://docs.docker.com/engine/admin/systemd/
+#
+
+# Customize location of Docker binary (especially for development testing).
+#DOCKERD="/usr/local/bin/dockerd"
+
+# Use DOCKER_OPTS to modify the daemon startup options.
+#DOCKER_OPTS="--dns 8.8.8.8 --dns 8.8.4.4"
+
+# If you need Docker to use an HTTP proxy, it can also be specified here.
+#export http_proxy="http://127.0.0.1:3128/"
+
+# This is also a handy place to tweak where Docker's temporary files go.
+#export DOCKER_TMPDIR="/mnt/bigdrive/docker-tmp"
+
+OPTIONS="
+{% if docker_tls is defined and
+      docker_tls | count > 0 %}
+  {% if docker_tls.verify is defined and
+        docker_tls.verify %}
+  --tlsverify \
+  {% endif %}
+  {% if docker_tls.ca_cert is defined and
+        docker_tls.cert is defined and
+        docker_tls.key is defined and
+        docker_tls.ca_cert | string | length > 0 and
+        docker_tls.cert | string | length > 0 and
+        docker_tls.key | string | length > 0 %}
+  --tlscacert={{ docker_tls.ca_cert }} \
+  --tlscert={{ docker_tls.cert }} \
+  --tlskey={{ docker_tls.key }} \
+  {% endif %}
+{% endif %}
+  --containerd={{ docker_containerd.socket }}
+
+"

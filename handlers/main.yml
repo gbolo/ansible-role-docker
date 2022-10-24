@@ -12,11 +12,22 @@
     name: docker
     state: restarted
 
+- name: reload docker
+  ansible.builtin.service:
+    name: docker
+    state: reloaded
+
 - name: daemon-reload
   ansible.builtin.systemd:
     daemon_reload: true
     force: true
   when:
     - ansible_service_mgr == 'systemd'
+
+- name: information about config changes
+  ansible.builtin.debug:
+    msg: "{{ _changed_docker_configuration.diff }}"
+  when:
+    - _changed_docker_configuration.changed
 
 ...

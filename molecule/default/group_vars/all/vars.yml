@@ -1,54 +1,54 @@
 ---
 
-docker_client_config:
-  ## the location we should push client configuration
-  - location: "/root/.docker/config.json"
-    enabled: false
-    auths:
-      registry.gitfoo.tld:
-        auth: amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg==
-    formats:
-      ps:
-        - ".ID"
-        - ".Names"
-        - ".Status"
-        - ".Labels"
-        - ".RunningFor"
-        - ".Ports"
-      images:
-        - ".ID"
-        - ".Repository"
-        - ".Tag"
-        - ".CreatedAt"
+docker_client_config: {}
+#   ## the location we should push client configuration
+#   - location: "/root/.docker/config.json"
+#     enabled: false
+#     auths:
+#       registry.gitfoo.tld:
+#         auth: amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg==
+#     formats:
+#       ps:
+#         - ".ID"
+#         - ".Names"
+#         - ".Status"
+#         - ".Labels"
+#         - ".RunningFor"
+#         - ".Ports"
+#       images:
+#         - ".ID"
+#         - ".Repository"
+#         - ".Tag"
+#         - ".CreatedAt"
+#
+#     ## the location we should push client configuration
+#   - location: "/var/tmp/foo/config.json"
+#     enabled: false
+#     auths:
+#       "test.tld":
+#         username: "FOO-was-sonst"
+#         passwort: "ja-toll-schon-wieder-alles-scheisse!"
 
-    ## the location we should push client configuration
-  - location: "/var/tmp/foo/config.json"
-    enabled: false
-    auths:
-      "test.tld":
-        username: "FOO-was-sonst"
-        passwort: "ja-toll-schon-wieder-alles-scheisse!"
-
-docker_config:
-  # data_root: /opt/docker
-  max_concurrent_downloads: 10
-  debug: false
-  # enable experimental mode
-  experimental: false
-  # expose docker api over socket file and tcp
-  hosts:
-    - unix:///var/run/docker.sock
-    - tcp://0.0.0.0:3485
-  # bip: "192.168.9.0/24"
-  fixed_cidr: "192.168.9.0/24"
-  # set default search domains
-  dns_search:
-    - docker.local
-  # Binding to IP address without --tlsverify is insecure and gives root access on this machine
-  # to everyone who has access to your network.
-  # Binding to an IP address without --tlsverify is deprecated
-  # Support for listening on TCP without authentication or explicit intent to run without
-  # authentication will be removed in the next release
-  tls: false
-  tlsverify: false
-  # storage_driver: overlay2
+docker_config: {}
+#   # data_root: /opt/docker
+#   max_concurrent_downloads: 10
+#   debug: false
+#   # enable experimental mode
+#   experimental: false
+#   # expose docker api over socket file and tcp
+#   hosts:
+#     - unix:///var/run/docker.sock
+#     - tcp://0.0.0.0:3485
+#   # bip: "192.168.9.0/24"
+#   fixed_cidr: "192.168.9.0/24"
+#   # set default search domains
+#   dns_search:
+#     - docker.local
+#   # Binding to IP address without --tlsverify is insecure and gives root access on this machine
+#   # to everyone who has access to your network.
+#   # Binding to an IP address without --tlsverify is deprecated
+#   # Support for listening on TCP without authentication or explicit intent to run without
+#   # authentication will be removed in the next release
+#   tls: false
+#   tlsverify: false
+#   # storage_driver: overlay2

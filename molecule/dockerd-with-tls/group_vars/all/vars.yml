@@ -1,0 +1,55 @@
+---
+
+docker_client_config:
+  ## the location we should push client configuration
+  - location: "/root/.docker/config.json"
+    enabled: true
+    # auths:
+    #   registry.gitfoo.tld:
+    #     auth: amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg==
+    formats:
+      ps:
+        - ".ID"
+        - ".Names"
+        - ".Status"
+        - ".Labels"
+        - ".RunningFor"
+        - ".Ports"
+      images:
+        - ".ID"
+        - ".Size"
+        - ".Repository"
+        - ".Tag"
+        - ".CreatedAt"
+
+    ## the location we should push client configuration
+  - location: "/var/tmp/foo/config.json"
+    enabled: false
+    auths:
+      "test.tld":
+        username: "FOO-was-sonst"
+        passwort: "ja-toll-schon-wieder-alles-scheisse!"
+
+docker_config:
+  data_root: /opt/docker
+  max_concurrent_downloads: 10
+  debug: false
+  log_opts:
+    "cache-disabled": true
+    "cache-compress": "true"
+    "cache-max-file": 5
+  experimental: false
+  hosts:
+    - unix:///var/run/docker.sock
+    - tcp://0.0.0.0:3485
+  fixed_cidr: "192.168.9.0/24"
+  dns_search:
+    - docker.local
+  metrics_addr: "127.0.0.1:9999"
+  tls:
+    verify: true
+    ca_cert: "{{ snakeoil_extract_to }}/{{ snakeoil_domain }}/{{ snakeoil_domain }}.crt"
+    cert: "{{ snakeoil_extract_to }}/{{ snakeoil_domain }}/{{ snakeoil_domain }}.pem"
+    key: "{{ snakeoil_extract_to }}/{{ snakeoil_domain }}/{{ snakeoil_domain }}.key"
+
+...

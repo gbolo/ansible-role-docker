@@ -16,6 +16,13 @@ docker_service:
   ## name of docker service
   name: docker
 
+# support TLS for docker daemon
+docker_tls:
+  verify: false
+  ca_cert: ""
+  cert: ""
+  key: ""
+
 ## install docker-compose in version
 docker_compose: {}
 # as example:
@@ -64,11 +71,52 @@ docker_client_config: []
 
 # for full doku, see: README.md
 docker_config:
+  authorization_plugins: []
+  bip: ""
+  bridge: ""
   data_root: "/var/lib/docker"
+  debug: false
+  default_gateway: ""
+  default_gateway_v6: ""
+  default_shm_size: ""
+  default_ulimits: {}
+  dns: []
+  dns_opts: []
+  dns_search: []
+  experimental: false
+  fixed_cidr: ""
+  fixed_cidr_v6: ""
+  group: ""
+  hosts: []
+  insecure_registries: []
+  ip: ""
+  ip_forward:
+  ip_masq:
+  iptables:
+  ip6tables:
+  ipv6:
+  labels: []
   log_driver: ""
+  log_level: ""
   log_opts: {}
   max_concurrent_downloads: 3
   max_concurrent_uploads: 5
-  debug: false
+  max_download_attempts:
+  metrics_addr: ""
+  oom_score_adjust:
+  pidfile:
+  raw_logs:
+  registry_mirrors: []
+  seccomp_profile: ""
+  selinux_enabled: false
+  shutdown_timeout:
+  storage_driver: ""
+  storage_opts: []
+  tls:
+    verify: false
+    ca_cert: ""
+    cert: ""
+    key: ""
+
 
 ...

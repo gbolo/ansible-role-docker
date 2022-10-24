@@ -15,6 +15,17 @@
     name: "{{ docker_packages }}"
     state: "{{ docker_state }}"
 
+- name: create docker run configuration
+  ansible.builtin.template:
+    src: "docker.j2"
+    dest: "{{ docker_defaults_directory }}/docker"
+    force: true
+    owner: root
+    group: root
+    mode: 0640
+  notify:
+    - reload docker
+
 - name: ensure containerd is running and enabled on archlinux
   ansible.builtin.service:
     name: containerd

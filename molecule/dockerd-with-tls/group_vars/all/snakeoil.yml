@@ -1,0 +1,13 @@
+---
+
+snakeoil_extract_to: /etc/snakeoil
+
+snakeoil_domain: docker.local
+
+snakeoil_life_time: 30
+
+snakeoil_alt_names:
+  - dns:
+      - daemon.docker.local
+
+...

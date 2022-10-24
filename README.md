@@ -149,38 +149,56 @@ docker_client_config:
 
 currently supported options:
 
-| options                    | type     | default           | description       |
-| :-----                     | :----    | :----             | :-----            |
-| `log_driver`               | `string` | `json-file`       | Default driver for container logs |
-| `log_opts`                 | `dict`   | `{}`              | Default log driver options for containers |
-| `log_level`                | `string` | `info`            | Set the logging level (`debug`,`info`,`warn`,`error`,`fatal`) |
-| `dns`                      | `list`   | `[]`              | DNS server to use |
-| `dns_opts`                 | `list`   | `[]`              | DNS options to use |
-| `dns_search`               | `list`   | `[]`              | DNS search domains to use |
-| `data_root`                | `string` | `/var/lib/docker` | Root directory of persistent Docker state |
-| `max_concurrent_downloads` | `int`    | `3`               | Set the max concurrent downloads for each pull |
-| `max_concurrent_uploads`   | `int`    | `5`               | Set the max concurrent uploads for each push |
-| `max_download_attempts`    | `int`    | `5`               | Set the max download attempts for each pull |
-| `metrics_addr`             | `string` | `-`               | Set default address and port to serve the metrics api on |
-| `debug`                    | `bool`   | `false`           | Enable debug mode |
-| `selinux_enabled`          | `bool`   | `false`           | Enable selinux support |
-| `seccomp_profile`          | `string` | `-`               | Path to seccomp profile |
-| `experimental`             | `bool`   | `false`           | Enable experimental features |
-| `storage_driver`           | `string` | `-`               | Storage driver to use |
-| `storage_opts`             | `list`   | `[]`              | Storage driver options |
-| `group`                    | `group`  | `docker`          | Group for the unix socket |
-| `bridge`                   | `string` | `-`               | Attach containers to a network bridge |
-| `bip`                      | `string` | `-`               | Specify network bridge IP |
-| `ip`                       | `string` | `0.0.0.0`         | Default IP when binding container ports |
-| `fixed_cidr`               | `string` | `-`               | IPv4 subnet for fixed IPs |
-| `fixed_cidr_v6`            | `string` | `-`               | IPv6 subnet for fixed IPs |
-| `default_gateway`          | `string` | `-`               | Container default gateway IPv4 address |
-| `default_gateway_v6`       | `string` | `-`               | Container default gateway IPv6 address |
-| `hosts`                    | `list`   | `[]`              | Daemon socket(s) to connect to |
-| `insecure_registries`      | `list`   | `[]`              | Enable insecure registry communication |
-| `shutdown_timeout`         | `int`    | `15`              | Set the default shutdown timeout |
+| options                    | type     | default               | description       |
+| :-----                     | :----    | :----                 | :-----            |
+| `authorization_plugins`    | `list`   | `[]`                  |  |
+| `bip`                      | `string` | `-`                   | Specify network bridge IP |
+| `bridge`                   | `string` | `-`                   | Attach containers to a network bridge |
+| `data_root`                | `string` | `/var/lib/docker`     | Root directory of persistent Docker state |
+| `debug`                    | `bool`   | `false`               | Enable debug mode |
+| `default_gateway`          | `string` | `-`                   | Container default gateway IPv4 address |
+| `default_gateway_v6`       | `string` | `-`                   | Container default gateway IPv6 address |
+| `default_shm_size`         | `string` | `-`                   | Default shm size for containers (default `64MiB`) |
+| `default_ulimits`          | `dict`   | `{}`                  | Default ulimits for containers (default []) |
+| `dns`                      | `list`   | `[]`                  | DNS server to use |
+| `dns_opts`                 | `list`   | `[]`                  | DNS options to use |
+| `dns_search`               | `list`   | `[]`                  | DNS search domains to use |
+| `experimental`             | `bool`   | `false`               | Enable experimental features |
+| `fixed_cidr`               | `string` | `-`                   | IPv4 subnet for fixed IPs |
+| `fixed_cidr_v6`            | `string` | `-`                   | IPv6 subnet for fixed IPs |
+| `group`                    | `group`  | `docker`              | Group for the unix socket |
+| `hosts`                    | `list`   | `[]`                  | Daemon socket(s) to connect to |
+| `insecure_registries`      | `list`   | `[]`                  | Enable insecure registry communication |
+| `ip`                       | `string` | `0.0.0.0`             | Default IP when binding container ports |
+| `ip_forward`               | `bool`   | `true`                | Enable net.ipv4.ip_forward (default true) |
+| `ip_masq`                  | `bool`   | `true`                | Enable IP masquerading (default true) |
+| `iptables`                 | `bool`   | `true`                | Enable addition of iptables rules (default true) |
+| `ip6tables`                | `bool`   | `false`               | Enable addition of ip6tables rules (default false) |
+| `ipv6`                     | `bool`   | `false`               | Enable IPv6 networking |
+| `labels`                   | `list`   | `[]`                  | Set key=value labels to the daemon |
+| `log_driver`               | `string` | `json-file`           | Default driver for container logs |
+| `log_level`                | `string` | `info`                | Set the logging level (`debug`,`info`,`warn`,`error`,`fatal`) |
+| `log_opts`                 | `dict`   | `{}`                  | Default log driver options for containers |
+| `max_concurrent_downloads` | `int`    | `3`                   | Set the max concurrent downloads for each pull |
+| `max_concurrent_uploads`   | `int`    | `5`                   | Set the max concurrent uploads for each push |
+| `max_download_attempts`    | `int`    | `5`                   | Set the max download attempts for each pull |
+| `metrics_addr`             | `string` | `-`                   | Set default address and port to serve the metrics api on |
+| `oom_score_adjust`         | `int`    | `-500`                | Set the oom_score_adj for the daemon (default -500) |
+| `pidfile`                  | `string` | `/var/run/docker.pid` | Path to use for daemon PID file (default "/var/run/docker.pid") |
+| `raw_logs`                 | `bool`   | `false`               | Full timestamps without ANSI coloring |
+| `registry_mirrors`         | `list`   | `[]`                  | Preferred Docker registry mirror |
+| `seccomp_profile`          | `string` | `-`                   | Path to seccomp profile |
+| `selinux_enabled`          | `bool`   | `false`               | Enable selinux support |
+| `shutdown_timeout`         | `int`    | `15`                  | Set the default shutdown timeout |
+| `storage_driver`           | `string` | `overlay2`            | [Storage driver](https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-storage-driver) to use (`aufs`, `devicemapper`, `btrfs`, `zfs`, `overlay`, `overlay2`, `fuse-overlayfs`) |
+| `storage_opts`             | `list`   | `[]`                  | [Storage driver options](https://docs.docker.com/engine/reference/commandline/dockerd/#options-per-storage-driver) |
+| `tls.verify`               | `bool`   | `false`               | Use TLS and verify the remote |
+| `tls.ca_cert`              | `string` | `~/.docker/ca.pem`    | Trust certs signed only by this CA (default "~/.docker/ca.pem") |
+| `tls.cert`                 | `string` | `~/.docker/cert.pem`  | Path to TLS certificate file (default "~/.docker/cert.pem") |
+| `tls.key`                  | `string` | `~/.docker/key.pem`   | Path to TLS key file (default "~/.docker/key.pem") |
 
 
+#### Examples
 
 ```yaml
 docker_config:
@@ -205,6 +223,14 @@ docker_config:
   group: "{{ docker_group }}"
   insecure_registries: []
 ```
+
+There are more examples in the molecule tests:
+
+- [default](molecule/default/group_vars/all/vars.yml)
+- [dockerd-with-plugin](molecule/dockerd-with-plugin/group_vars/all/vars.yml)
+- [dockerd-with-tls](molecule/dockerd-with-tls/group_vars/all/vars.yml)
+- [update-config](molecule/update-config/group_vars/all/vars.yml)
+
 
 ### docker_users options
 
