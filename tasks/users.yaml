@@ -8,7 +8,7 @@
     state: present
 
 - name: sets ACL for {{ item }} on /run/docker.sock
-  acl:
+  ansible.builtin.acl:
     path: /run/docker.sock
     entity: "{{ item }}"
     etype: user

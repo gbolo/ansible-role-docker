@@ -16,13 +16,6 @@ docker_service:
   ## name of docker service
   name: docker
 
-# support TLS for docker daemon
-docker_tls:
-  verify: false
-  ca_cert: ""
-  cert: ""
-  key: ""
-
 ## install docker-compose in version
 docker_compose: {}
 # as example:
@@ -66,6 +59,20 @@ docker_client_config: []
 #       "https://harbor.deployment.tld":
 #         auth: "amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg=="
 #         email: "jenkins@deployment.tld"
+#     formats:
+#       ps:
+#         - ".ID"
+#         - ".Names"
+#         - ".Status"
+#         - ".Labels"
+#         - ".RunningFor"
+#         - ".Ports"
+#       images:
+#         - ".ID"
+#         - ".Size"
+#         - ".Repository"
+#         - ".Tag"
+#         - ".CreatedAt"
 
 # default dockerd configuration options ----------------------------------------
 

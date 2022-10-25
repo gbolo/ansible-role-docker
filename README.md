@@ -137,6 +137,7 @@ docker_client_config:
         - ".Ports"
       images:
         - ".ID"
+        - ".Size"
         - ".Repository"
         - ".Tag"
         - ".CreatedAt"
