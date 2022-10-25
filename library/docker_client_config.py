@@ -185,6 +185,15 @@ class DockerClientConfig(object):
 
     def _handle_formats(self):
         """
+          "psFormat": "table {{.ID}}\\t{{.Image}}\\t{{.Command}}\\t{{.Labels}}",
+          "imagesFormat": "table {{.ID}}\\t{{.Repository}}\\t{{.Tag}}\\t{{.CreatedAt}}",
+          "pluginsFormat": "table {{.ID}}\t{{.Name}}\t{{.Enabled}}",
+          "statsFormat": "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}",
+          "servicesFormat": "table {{.ID}}\t{{.Name}}\t{{.Mode}}",
+          "secretFormat": "table {{.ID}}\t{{.Name}}\t{{.CreatedAt}}\t{{.UpdatedAt}}",
+          "configFormat": "table {{.ID}}\t{{.Name}}\t{{.CreatedAt}}\t{{.UpdatedAt}}",
+          "nodesFormat": "table {{.ID}}\t{{.Hostname}}\t{{.Availability}}",
+
           possible  values:
             formats:
               ps:
@@ -223,9 +232,10 @@ class DockerClientConfig(object):
 
         result = {}
 
-        for k, v in self.formats.items():
-            if len(v) != 0:
-                result[f"{k}Format"] = __format_to_string(v)
+        if self.formats.items() in ["ps", "images", "plugins", "stats", "services", "secret", "config", "nodes"]:
+            for k, v in self.formats.items():
+                if len(v) != 0:
+                    result[f"{k}Format"] = __format_to_string(v)
 
         return result
 
