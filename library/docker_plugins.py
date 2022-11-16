@@ -125,7 +125,7 @@ class DockerPlugins():
         args.append("install")
         args.append(f"{self.plugin_source}:{self.plugin_version}")
         args.append("--alias")
-        args.append(self.plugin_alias)
+        args.append(f"{self.plugin_alias}:{self.plugin_version}")
         args.append("--grant-all-permissions")
 
         rc, out, err = self._exec(args)
@@ -134,12 +134,16 @@ class DockerPlugins():
             return dict(
                 changed = True,
                 failed = False,
+                rc = rc,
+                args = " ".join(args),
                 msg = f"plugin {self.plugin_alias} succesfull installed"
             )
         else:
             return dict(
                 changed = False,
                 failed = True,
+                rc = rc,
+                args = " ".join(args),
                 error = err,
                 msg = f"plugin {self.plugin_alias} could not be installed"
             )
@@ -147,12 +151,31 @@ class DockerPlugins():
     def uninstall_plugin(self):
         """
         """
+        args = ["docker"]
+        args.append("plugin")
+        args.append("remove")
+        args.append("--force")
+        args.append(f"{self.plugin_source}:{self.plugin_version}")
 
-        return dict(
-            changed=True,
-            failed=False,
-            msg="plugin remove are not implemented yet"
-        )
+        rc, out, err = self._exec(args)
+
+        if rc == 0:
+            return dict(
+                changed = True,
+                failed = False,
+                rc = rc,
+                args = " ".join(args),
+                msg = f"plugin {self.plugin_alias} succesfull removed."
+            )
+        else:
+            return dict(
+                changed = False,
+                failed = True,
+                rc = rc,
+                args = " ".join(args),
+                error = err,
+                msg = f"plugin {self.plugin_alias} could not be removed."
+            )
 
     def _exec(self, cmd):
         """

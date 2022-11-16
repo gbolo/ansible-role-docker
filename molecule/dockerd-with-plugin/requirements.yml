@@ -1,0 +1,6 @@
+---
+
+- name: loki
+  src: bodsch.loki
+
+...

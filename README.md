@@ -253,7 +253,8 @@ Install and activate custom plugins.
 ```yaml
 docker_plugins:
   - alias: loki
-    source: grafana/loki-docker-driver:latest
+    source: grafana/loki-docker-driver
+    version: 2.7.0
     state: present
 ```
 

@@ -1,6 +1,6 @@
 ---
 - name: converge
-  hosts: all
+  hosts: instance
   any_errors_fatal: false
 
   environment:

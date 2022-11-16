@@ -9,7 +9,7 @@
     group: root
 
 - name: manage users for docker
-  ansible.builtin.include_tasks: users.yaml
+  ansible.builtin.include_tasks: users.yml
   loop: "{{ docker_users }}"
   loop_control:
     index_var: index

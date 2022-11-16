@@ -26,4 +26,14 @@
           - "ansible version      : {{ ansible_version.full }}"
           - "python version       : {{ ansible_python.version.major }}.{{ ansible_python.version.minor }}"
 
+- name: prepare loki
+  hosts: loki
+  any_errors_fatal: false
+
+  environment:
+    NETRC: ''
+
+  roles:
+    - role: loki
+
 ...

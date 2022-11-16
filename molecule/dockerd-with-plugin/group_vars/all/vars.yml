@@ -3,7 +3,7 @@
 docker_plugins:
   - alias: loki
     source: grafana/loki-docker-driver
-    version: latest
+    version: "{{ loki_version }}"
     state: present
 
 docker_client_config:
@@ -39,7 +39,7 @@ docker_client_config:
 docker_config:
   # data_root: /opt/docker
   max_concurrent_downloads: 10
-  debug: false
+  debug: true
   # enable experimental mode
   experimental: false
   # expose docker api over socket file and tcp
@@ -59,3 +59,15 @@ docker_config:
   tls: false
   tlsverify: false
   # storage_driver: overlay2
+  # logg driver
+  log_driver: "loki:{{ loki_version }}"
+  log_opts:
+    # https://grafana.com/docs/loki/latest/clients/docker-driver/configuration/
+    loki-url: "http://loki:3100/loki/api/v1/push"
+    loki-retries: "3"
+    loki-batch-size: 400
+    labels: "environment"
+    no-file: "false"
+    max-size: "10m"
+    max-file: "3"
+    env: "molecule,test"

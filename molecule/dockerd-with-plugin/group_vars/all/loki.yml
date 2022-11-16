@@ -1,0 +1,9 @@
+---
+
+loki_version: "2.7.0"
+
+loki_config_server:
+  http_listen_address: "0.0.0.0"
+  http_listen_port: 3100
+
+...
