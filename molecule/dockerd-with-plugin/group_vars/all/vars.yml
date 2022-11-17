@@ -30,7 +30,7 @@ docker_client_config:
 
     ## the location we should push client configuration
   - location: "/var/tmp/foo/config.json"
-    enabled: false
+    enabled: true
     auths:
       "test.tld":
         username: "FOO-was-sonst"
@@ -39,7 +39,7 @@ docker_client_config:
 docker_config:
   # data_root: /opt/docker
   max_concurrent_downloads: 10
-  debug: true
+  debug: false
   # enable experimental mode
   experimental: false
   # expose docker api over socket file and tcp

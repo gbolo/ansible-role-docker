@@ -9,7 +9,7 @@ import os
 import json
 import hashlib
 import base64
-
+from pathlib import Path
 from ansible.module_utils.basic import AnsibleModule
 
 __metaclass__ = type
@@ -54,7 +54,12 @@ class DockerClientConfig(object):
         self.auths = module.params.get("auths")
         self.formats = module.params.get("formats")
 
-        self.config_checksum = f"{self.dest}.checksum"
+        self.checksum_directory = f"{Path.home()}/.ansible/cache/docker"
+
+        hashed_dest = self.__checksum(self.dest)
+
+        self.config_checksum = os.path.join(self.checksum_directory, f"client_{hashed_dest}.checksum")
+
         # TODO
         # maybe later?
         # valid_formate_entries = [
@@ -66,6 +71,9 @@ class DockerClientConfig(object):
         """
             run
         """
+
+        self.__create_directory(self.checksum_directory)
+
         if self.state == 'absent':
             """
                 remove created files
@@ -104,6 +112,13 @@ class DockerClientConfig(object):
                 failed = True,
                 msg = "'formats' must be an dictionary."
             )
+
+        if not os.path.isfile(self.dest):
+            """
+                clean manual removements
+            """
+            if os.path.isfile(self.config_checksum):
+                os.remove(self.config_checksum)
 
         invalid_authentications, authentications = self._handle_authentications()
         formats = self._handle_formats()
@@ -305,10 +320,23 @@ class DockerClientConfig(object):
 
         return checksum
 
+    def __create_directory(self, dir):
+        """
+        """
+        try:
+            os.makedirs(dir, exist_ok=True)
+        except FileExistsError:
+            pass
+
+        if os.path.isdir(dir):
+            return True
+        else:
+            return False
 
 # ---------------------------------------------------------------------------------------
 # Module execution.
 #
+
 
 def main():
     module = AnsibleModule(

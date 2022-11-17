@@ -78,7 +78,7 @@
 - name: flush handlers at this point to avoid double restart
   ansible.builtin.meta: flush_handlers
 
-- name: configure docker daemon.json
+- name: create docker config file daemon.json
   docker_common_config:
     state: present
     log_driver: "{{ docker_config.log_driver | default(omit) }}"

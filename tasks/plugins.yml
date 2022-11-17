@@ -26,6 +26,10 @@
   loop_control:
     label: "{{ item.alias }}"
   notify:
-    - restart-docker
+    - create daemon.json
+    # - restart-docker
+  when:
+    - not _plugin_state.results[0].installed or
+      not _plugin_state.results[0].equal_versions
 
 ...

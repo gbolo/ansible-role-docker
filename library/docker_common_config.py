@@ -13,7 +13,9 @@ import difflib
 import itertools
 import textwrap
 import typing
+import docker
 
+from pathlib import Path
 from ansible.module_utils.basic import AnsibleModule
 
 __metaclass__ = type
@@ -286,12 +288,17 @@ class DockerCommonConfig(object):
         self.tls_verify = module.params.get("tls_verify")
 
         self.config_file = "/etc/docker/daemon.json"
-        self.config_checksum = "/etc/docker/.checksum"
+        # self.config_checksum = "/etc/docker/.checksum"
+
+        self.checksum_directory = f"{Path.home()}/.ansible/cache/docker"
+        self.config_checksum = os.path.join(self.checksum_directory, "daemon.checksum")
 
     def run(self):
         """
             run
         """
+        self.__create_directory(self.checksum_directory)
+
         if self.state == 'absent':
             """
                 remove created files
@@ -316,6 +323,8 @@ class DockerCommonConfig(object):
         _data_changed = False
         _msg = "The configuration has not been changed."
         _diff = []
+
+        self.__docker_client()
 
         data = dict()
 
@@ -394,11 +403,20 @@ class DockerCommonConfig(object):
         if self.__validate(self.labels):
             data["labels"] = self.labels
 
-        if self.__validate(self.log_driver):
-            data["log-driver"] = self.log_driver
-
         if self.__validate(self.log_level) and self.log_level in ["debug", "info", "warn", "error", "fatal"]:
             data["log-level"] = self.log_level
+
+        if self.__validate(self.log_driver):
+
+            if "loki" in self.log_driver:
+                plugin_valid, plugin_state_message = self.__check_plugin()
+
+                if not plugin_valid:
+                    self.module.log(msg="ERROR: log_driver are not valid!")
+                    self.module.log(msg=f"ERROR: {plugin_state_message}")
+                    self.log_driver = "json-file"
+
+            data["log-driver"] = self.log_driver
 
         if self.__validate(self.log_opts):
             data["log-opts"] = self.__values_as_string(self.log_opts)
@@ -560,6 +578,98 @@ class DockerCommonConfig(object):
 
         with open(self.config_checksum, 'w') as fp:
             fp.write(_checksum)
+
+    def __create_directory(self, dir):
+        """
+        """
+        try:
+            os.makedirs(dir, exist_ok=True)
+        except FileExistsError:
+            pass
+
+        if os.path.isdir(dir):
+            return True
+        else:
+            return False
+
+    def __docker_client(self):
+        """
+        """
+        docker_status = False
+        docker_socket = "/var/run/docker.sock"
+        # TODO
+        # with broken ~/.docker/daemon.json will this fail!
+        try:
+            if os.path.exists(docker_socket):
+                # self.module.log("use docker.sock")
+                self.docker_client = docker.DockerClient(base_url=f"unix://{docker_socket}")
+            else:
+                self.docker_client = docker.from_env()
+
+            docker_status = self.docker_client.ping()
+        except docker.errors.APIError as e:
+            self.module.log(
+                msg=f" exception: {e}"
+            )
+        except Exception as e:
+            self.module.log(
+                msg=f" exception: {e}"
+            )
+
+        if not docker_status:
+            return dict(
+                changed = False,
+                failed = True,
+                msg = "no running docker found"
+            )
+
+    def __check_plugin(self):
+        """
+        """
+        installed_plugin_name = None
+        installed_plugin_shortname = None
+        installed_plugin_version = None
+        installed_plugin_enabled = None
+
+        plugin_valid = False
+
+        msg = f"plugin {self.log_driver} ist not installed"
+
+        try:
+            p_list = self.docker_client.plugins.list()
+
+            for plugin in p_list:
+
+                installed_plugin_enabled = plugin.enabled
+
+                if installed_plugin_enabled:
+                    installed_plugin_name = plugin.name
+                    installed_plugin_shortname = plugin.name.split(':')[0]
+                    installed_plugin_version = plugin.name.split(':')[1]
+
+                    break
+
+        except docker.errors.APIError as e:
+            error = str(e)
+            self.module.log(msg=f"{error}")
+
+        except Exception as e:
+            error = str(e)
+            self.module.log(msg=f"{error}")
+
+        if installed_plugin_name and installed_plugin_version:
+            msg  = f"plugin {installed_plugin_shortname} is installed in version '{installed_plugin_version}'"
+
+            if self.log_driver == installed_plugin_name:
+                plugin_valid = True
+            else:
+                plugin_valid = False
+                msg += ", but versions are not equal!"
+
+            return plugin_valid, msg
+        else:
+            return plugin_valid, msg
+
 
 # ---------------------------------------------------------------------------------------
 # Module execution.
