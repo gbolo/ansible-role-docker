@@ -3,13 +3,15 @@
 
 This role will fully configure and install [dockerd](https://www.docker.com/).
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bodsch/ansible-icinga2/CI)][ci]
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/ansible-role-docker/main.yml?branch=main)][ci]
 [![GitHub issues](https://img.shields.io/github/issues/bodsch/ansible-role-docker)][issues]
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/bodsch/ansible-role-docker)][releases]
+[![Ansible Quality Score](https://img.shields.io/ansible/quality/50067?label=role%20quality)][quality]
 
 [ci]: https://github.com/bodsch/ansible-role-docker/actions
 [issues]: https://github.com/bodsch/ansible-role-docker/issues?q=is%3Aopen+is%3Aissue
 [releases]: https://github.com/bodsch/ansible-role-docker/releases
+[quality]: https://galaxy.ansible.com/bodsch/docker
 
 
 ## Requirements & Dependencies
