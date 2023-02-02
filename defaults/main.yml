@@ -51,7 +51,7 @@ docker_client_config_location: "/root/.docker/config.json"
 ## https://github.com/docker/docker-ce-packaging/pull/132
 # docker_config_hosts:
 #   - "unix:///var/run/docker.sock"
-docker_config_graph: "/var/lib/docker"
+docker_config_data_root: "/var/lib/docker"
 docker_config_log_driver: ""
 docker_config_log_opts: {}
 docker_config_max_concurrent_downloads: 3
@@ -85,7 +85,7 @@ docker_config_insecure_registries: []
 docker_config_common:
   "log-driver": "{{ docker_config_log_driver }}"
   "log-opts": "{{ docker_config_log_opts }}"
-  "graph": "{{ docker_config_graph }}"
+  "data-root": "{{ docker_config_data_root }}"
   "max-concurrent-downloads": "{{ docker_config_max_concurrent_downloads }}"
   "max-concurrent-uploads": "{{ docker_config_max_concurrent_uploads }}"
   "debug": "{{ docker_config_debug }}"
