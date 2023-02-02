@@ -63,7 +63,7 @@ docker_client_config_location: "/root/.docker/config.json"
 
 # default dockerd configuration options ----------------------------------------
 ## https://docs.docker.com/engine/reference/commandline/dockerd/#/linux-configuration-file
-docker_config_graph: "/var/lib/docker"
+docker_config_data_root: "/var/lib/docker"
 docker_config_log_driver: ""
 docker_config_log_opts: {}
 docker_config_max_concurrent_downloads: 3
@@ -111,7 +111,7 @@ Advanced playbook with various variables applied
 - hosts: localhost
   vars:
     # store docker containers/images to /opt/docker
-    docker_config_graph: /opt/docker
+    docker_config_data_root: /opt/docker
     # change default docker bridge subnet
     docker_config_bip: 172.16.77.77/24
     # set default log driver to journald
