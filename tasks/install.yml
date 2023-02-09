@@ -35,4 +35,23 @@
     - ansible_os_family | lower == 'archlinux'
     - ansible_service_mgr | lower == 'systemd'
 
+- name: flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: wait for running docker
+  ansible.builtin.wait_for:
+    path: /run/docker.pid
+    state: present
+    msg: Timeout to find file /run/docker.pid
+
+- name: define docker_version
+  docker_version:
+  register: docker_version
+
+- name: create local facts
+  ansible.builtin.template:
+    src: ansible_facts.j2
+    dest: /etc/ansible/facts.d/docker.fact
+    mode: 0755
+
 ...

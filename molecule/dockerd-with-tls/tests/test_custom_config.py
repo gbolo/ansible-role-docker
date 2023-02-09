@@ -3,6 +3,8 @@ from ansible.parsing.dataloader import DataLoader
 from ansible.template import Templar
 import pytest
 import os
+from packaging.version import Version, parse as parseVersion
+
 import testinfra.utils.ansible_runner
 
 import pprint
@@ -88,10 +90,18 @@ def get_vars(host):
     return result
 
 
+def local_facts(host):
+    """
+      return local facts
+    """
+    return host.ansible("setup").get("ansible_facts").get("ansible_local").get("docker")
+
+
 def test_directories(host, get_vars):
     """
     """
     docker_config = get_vars.get("docker_config")
+    docker_version = local_facts(host).get("version",{}).get("docker")
 
     if docker_config.get("data_root"):
         data_root = docker_config.get("data_root")
@@ -107,8 +117,10 @@ def test_directories(host, get_vars):
             'runtimes',
             'swarm',
             'tmp',
-            'trust',
             'volumes']
+
+        if Version(docker_version) < Version("23.0.0"):
+            docker_directories.append('trust')
 
         for directory in docker_directories:
             d = host.file(os.path.join(data_root, directory))

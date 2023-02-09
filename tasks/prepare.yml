@@ -58,7 +58,6 @@
   ignore_errors: true
   register: pip_install
 
-
 - name: detect installed docker_compose
   ansible.builtin.stat:
     path: "/usr/local/bin/docker-compose-{{ docker_compose.version }}"
@@ -67,5 +66,13 @@
     - docker_compose is defined
     - docker_compose.install is defined
     - docker_compose.install
+
+- name: create ansible local facts directory
+  ansible.builtin.file:
+    dest: /etc/ansible/facts.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
 
 ...
