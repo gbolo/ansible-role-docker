@@ -247,10 +247,9 @@ class DockerClientConfig(object):
 
         result = {}
 
-        if self.formats.items() in ["ps", "images", "plugins", "stats", "services", "secret", "config", "nodes"]:
-            for k, v in self.formats.items():
-                if len(v) != 0:
-                    result[f"{k}Format"] = __format_to_string(v)
+        for k, v in self.formats.items():
+            if k in ["ps", "images", "plugins", "stats", "services", "secret", "config", "nodes"] and len(v) != 0:
+                result[f"{k}Format"] = __format_to_string(v)
 
         return result
 
