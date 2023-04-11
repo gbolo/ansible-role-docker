@@ -51,5 +51,9 @@ docker_config:
     ca_cert: "{{ snakeoil_extract_to }}/{{ snakeoil_domain }}/{{ snakeoil_domain }}.crt"
     cert: "{{ snakeoil_extract_to }}/{{ snakeoil_domain }}/{{ snakeoil_domain }}.pem"
     key: "{{ snakeoil_extract_to }}/{{ snakeoil_domain }}/{{ snakeoil_domain }}.key"
+  # works not in the molecule docker environment
+  storage_driver: overlay2
+  storage_opts:
+    - overlay2.size=10G
 
 ...

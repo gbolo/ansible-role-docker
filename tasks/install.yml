@@ -38,6 +38,11 @@
 - name: flush handlers
   ansible.builtin.meta: flush_handlers
 
+- name: ensure {{ docker_service.name }} is running
+  ansible.builtin.service:
+    name: "{{ docker_service.name }}"
+    state: started
+
 - name: wait for running docker
   ansible.builtin.wait_for:
     path: /run/docker.pid

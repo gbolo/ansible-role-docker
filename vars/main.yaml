@@ -13,6 +13,16 @@ docker_defaults_compose:
   install: false
   version: 1.29.2
 
+docker_defaults_service:
+  tls:
+    verify: false
+    ca_cert: ""
+    cert: ""
+    key: ""
+  storage:
+    opts: []
+    driver: ""
+
 docker_defaults_tls:
   verify: false
   ca_cert: ""

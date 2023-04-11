@@ -407,7 +407,6 @@ class DockerCommonConfig(object):
             data["log-level"] = self.log_level
 
         if self.__validate(self.log_driver):
-
             if "loki" in self.log_driver:
                 plugin_valid, plugin_state_message = self.__check_plugin()
 
@@ -455,11 +454,25 @@ class DockerCommonConfig(object):
         if self.__validate(self.shutdown_timeout):
             data["shutdown-timeout"] = self.shutdown_timeout
 
-        if self.__validate(self.storage_driver) and self.storage_driver in ["aufs", "devicemapper", "btrfs", "zfs", "overlay", "overlay2", "fuse-overlayfs"]:
-            data["storage-driver"] = self.storage_driver
+        if self.__validate(self.storage_driver):
+            self.module.log(msg=f"  - {self.storage_driver}")
+            self.module.log(msg=f"  - {self.storage_opts}")
+            valid_storage_drivers = ["aufs", "devicemapper", "btrfs", "zfs", "overlay", "overlay2", "fuse-overlayfs"]
+            if self.storage_driver in valid_storage_drivers:
+                data["storage-driver"] = self.storage_driver
 
-        if self.__validate(self.storage_opts):
-            data["storage-opts"] = self.storage_opts
+                if self.__validate(self.storage_opts):
+                    """
+                    # TODO
+                    #  validate storage_opts
+                    # -> https://docs.docker.com/engine/reference/commandline/dockerd/#options-per-storage-driver
+                    # Options for
+                    #   - devicemapper are prefixed with dm
+                    #   - zfs start with zfs
+                    #   - btrfs start with btrfs
+                    #   - overlay2 start with ...
+                    """
+                    data["storage-opts"] = self.storage_opts
 
         if self.tls_ca_cert and self.tls_cert and self.tls_key:
             """
