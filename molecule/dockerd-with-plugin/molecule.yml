@@ -18,13 +18,15 @@ platforms:
     docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
     privileged: true
     pre_build_image: true
-    capabilities:
-      - ALL
+    cgroupns_mode: host
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - /lib/modules:/lib/modules:Z
-      # needs only by ubuntu 20.04
-      - /var/lib/docker/overlay2:/var/lib/docker/overlay2:Z
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - /var/lib/containerd
+    capabilities:
+      - SYS_ADMIN
+    tmpfs:
+      - /run
+      - /tmp
 
   - name: instance
     image: "bodsch/ansible-${DISTRIBUTION:-debian:11}"
@@ -54,7 +56,6 @@ provisioner:
 
 scenario:
   test_sequence:
-    # - lint
     - destroy
     - dependency
     - syntax

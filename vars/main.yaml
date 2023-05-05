@@ -3,11 +3,13 @@
 docker_packages:
   - docker-ce
 
-docker_python_packages:
+docker_defaults_python_packages:
   - name: docker
-    version: 4.4.1
+    version: 6.0.0
   - name: setuptools
     version: 39.1.0
+  - name: requests
+    version: 2.28.0
 
 docker_defaults_compose:
   install: false

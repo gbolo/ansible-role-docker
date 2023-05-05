@@ -24,6 +24,7 @@
   ansible.builtin.set_fact:
     docker_config: "{{ docker_defaults_config | combine(docker_config, recursive=True) }}"
     docker_compose: "{{ docker_defaults_compose | combine(docker_compose, recursive=True) }}"
+    docker_python_packages: "{{ docker_python_packages | union(docker_defaults_python_packages) }}"
 
 - name: validate log_driver in docker config
   ansible.builtin.set_fact:
