@@ -81,6 +81,7 @@
 - name: create docker config file daemon.json
   docker_common_config:
     state: present
+    diff_output: "{{ docker_config_diff }}"
     log_driver: "{{ docker_config.log_driver | default(omit) }}"
     log_opts: "{{ docker_config.log_opts | default(omit) }}"
     log_level: "{{ docker_config.log_level | default(omit) }}"

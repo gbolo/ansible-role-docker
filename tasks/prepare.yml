@@ -24,7 +24,7 @@
   ansible.builtin.set_fact:
     docker_config: "{{ docker_defaults_config | combine(docker_config, recursive=True) }}"
     docker_compose: "{{ docker_defaults_compose | combine(docker_compose, recursive=True) }}"
-    docker_python_packages: "{{ docker_python_packages | union(docker_defaults_python_packages) }}"
+    docker_python_packages: "{{ docker_python_packages | bodsch.core.union_by(docker_defaults_python_packages, union_by='name') }}"
 
 - name: validate log_driver in docker config
   ansible.builtin.set_fact:
@@ -45,18 +45,27 @@
     - docker_dependencies is defined
     - docker_dependencies | count > 0
 
-- name: create requirements.txt
-  ansible.builtin.template:
-    src: requirements.txt.j2
-    dest: /tmp/docker-requirements.txt
-    mode: 0660
+- name: create pip requirements file
+  bodsch.core.pip_requirements:
+    name: docker
+    requirements: "{{ docker_python_packages }}"
+  register: pip_requirements
+
+- name: fail if pip not installed
+  ansible.builtin.fail:
+    msg: python pip is not installed
+  when:
+    - not pip_requirements.pip.present
 
 - name: install docker python packages
   ansible.builtin.pip:
     executable: pip3
-    requirements: /tmp/docker-requirements.txt
+    requirements: "{{ pip_requirements.requirements_file }}"
     state: present
-  ignore_errors: true
+  when:
+    - pip_requirements.requirements_file is defined
+    - pip_requirements.changed
+  ignore_errors: false
   register: pip_install
 
 - name: detect installed docker_compose
@@ -67,13 +76,5 @@
     - docker_compose is defined
     - docker_compose.install is defined
     - docker_compose.install
-
-- name: create ansible local facts directory
-  ansible.builtin.file:
-    dest: /etc/ansible/facts.d
-    state: directory
-    owner: root
-    group: root
-    mode: 0775
 
 ...

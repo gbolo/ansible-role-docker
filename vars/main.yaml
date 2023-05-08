@@ -24,6 +24,7 @@ docker_defaults_service:
   storage:
     opts: []
     driver: ""
+  config_file: "/etc/docker/daemon.json"
 
 docker_defaults_tls:
   verify: false

@@ -17,6 +17,10 @@
     name: docker
     state: reloaded
 
+- name: validate config
+  ansible.builtin.command: |
+    dockerd --validate
+
 - name: daemon-reload
   ansible.builtin.systemd:
     daemon_reload: true

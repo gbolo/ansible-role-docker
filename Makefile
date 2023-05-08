@@ -2,7 +2,7 @@
 export TOX_SCENARIO  ?= default
 export TOX_ANSIBLE   ?= ansible_6.1
 
-.PHONY: converge destroy verify lint
+.PHONY: converge destroy verify test lint
 
 default: converge
 
@@ -14,6 +14,9 @@ destroy:
 
 verify:
 	@hooks/verify
+
+test:
+	@hooks/test
 
 lint:
 	@hooks/lint

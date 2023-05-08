@@ -3,16 +3,10 @@
 name: dockerd with installed plugin
 
 on:
-  schedule:
-    - cron: "10 3 * * 0"
   workflow_dispatch:
   workflow_run:
     workflows:
       - "CI"
-    branches:
-      - main
-      - feature/**
-      - fix/**
     types:
       - completed
 
@@ -35,7 +29,7 @@ jobs:
           - '5.1'
           - '6.1'
         scenario:
-          - default
+          - dockerd-with-plugin
 
     steps:
       - name: check out the codebase.
@@ -55,8 +49,11 @@ jobs:
 
       - name: test with tox
         run: |
-          tox -e ansible_$(printf "${{ matrix.ansible-version }}") \
-            -- molecule test --scenario-name dockerd-with-plugin
+          make \
+            test \
+            -e TOX_SCENARIO="${{ matrix.scenario }}" \
+            -e TOX_ANSIBLE="ansible_${{ matrix.ansible-version }}" \
+            -e DISTRIBUTION="${{ matrix.image }}"
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
@@ -76,7 +73,7 @@ jobs:
           - '5.1'
           - '6.1'
         scenario:
-          - default
+          - dockerd-with-plugin
 
     steps:
       - name: check out the codebase.
@@ -96,8 +93,11 @@ jobs:
 
       - name: test with tox
         run: |
-          tox -e ansible_$(printf "${{ matrix.ansible-version }}") \
-            -- molecule test --scenario-name dockerd-with-plugin
+          make \
+            test \
+            -e TOX_SCENARIO="${{ matrix.scenario }}" \
+            -e TOX_ANSIBLE="ansible_${{ matrix.ansible-version }}" \
+            -e DISTRIBUTION="${{ matrix.image }}"
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'

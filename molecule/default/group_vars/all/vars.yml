@@ -1,3 +1,17 @@
 ---
 
+# docker_python_packages:
+#   - compare_direction: "=="
+#     name: docker
+#     version: 6.0.0
+#
+#   - version: 39.1.0
+#     name: setuptools
+#
+#   - name: requests
+#     versions:
+#       - ">= 2.28.0"
+#       - "< 2.30.0"
+#       - "!~ 1.1.0"
+
 ...

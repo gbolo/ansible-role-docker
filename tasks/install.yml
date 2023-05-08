@@ -24,6 +24,7 @@
     group: root
     mode: 0640
   notify:
+    - validate config
     - reload docker
 
 - name: ensure containerd is running and enabled on archlinux
@@ -35,13 +36,42 @@
     - ansible_os_family | lower == 'archlinux'
     - ansible_service_mgr | lower == 'systemd'
 
-- name: flush handlers
-  ansible.builtin.meta: flush_handlers
+# - name: flush handlers
+  # ansible.builtin.meta: flush_handlers
 
 - name: ensure {{ docker_service.name }} is running
   ansible.builtin.service:
     name: "{{ docker_service.name }}"
     state: started
+  register: running_service
+  ignore_errors: true
+
+- name: d
+  debug:
+    msg: "{{ running_service }}"
+
+- name: daemon start has failed
+  when:
+    - running_service.failed
+  block:
+    - name: ensure {{ docker_service.name }} is stopped
+      ansible.builtin.service:
+        name: "{{ docker_service.name }}"
+        state: stopped
+      # register: running_service
+      # ignore_errors: false
+
+    - name: remove broken config to start daemon
+      ansible.builtin.file:
+        state: absent
+        path: /etc/docker/daemon.json
+
+    - name: ensure {{ docker_service.name }} is running
+      ansible.builtin.service:
+        name: "{{ docker_service.name }}"
+        state: started
+      register: running_service
+      ignore_errors: false
 
 - name: wait for running docker
   ansible.builtin.wait_for:
@@ -53,10 +83,12 @@
   docker_version:
   register: docker_version
 
-- name: create local facts
-  ansible.builtin.template:
-    src: ansible_facts.j2
-    dest: /etc/ansible/facts.d/docker.fact
-    mode: 0755
+- name: create custom fact file
+  bodsch.core.facts:
+    name: docker
+    facts:
+      version:
+        docker: "{{ docker_version.versions.docker_version }}"
+        api: "{{ docker_version.versions.api_version }}"
 
 ...

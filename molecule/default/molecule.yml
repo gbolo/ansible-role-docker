@@ -35,10 +35,13 @@ provisioner:
     - -v
   config_options:
     defaults:
-      deprecation_warnings: True
+      deprecation_warnings: true
       stdout_callback: yaml
       callbacks_enabled: profile_tasks
-      # remote_tmp: /tmp/ansible-${USER}
+      gathering: smart
+      fact_caching: jsonfile
+      fact_caching_timeout: 8640
+      fact_caching_connection: ansible_facts
 
 scenario:
   test_sequence:

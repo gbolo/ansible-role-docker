@@ -8,9 +8,9 @@ from __future__ import absolute_import, division, print_function
 import os
 import json
 import docker
-from pathlib import Path
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible_collections.bodsch.core.plugins.module_utils.directory import create_directory
 
 __metaclass__ = type
 
@@ -40,8 +40,8 @@ class DockerPlugins():
         self.plugin_version = module.params.get("plugin_version")
         self.plugin_alias = module.params.get("plugin_alias")
 
-        self.checksum_directory = f"{Path.home()}/.ansible/cache/docker"
-        self.plugin_information_file = os.path.join(self.checksum_directory, f"plugin_{self.plugin_alias}")
+        self.cache_directory = "/var/cache/ansible/docker"
+        self.plugin_information_file = os.path.join(self.cache_directory, f"plugin_{self.plugin_alias}")
 
         self.docker_socket = "/var/run/docker.sock"
 
@@ -76,7 +76,7 @@ class DockerPlugins():
                 msg = "no running docker found"
             )
 
-        self.__create_directory(self.checksum_directory)
+        create_directory(self.cache_directory)
 
         self.plugin_state, self.plugin_version_equal, plugin_state_message = self.check_plugin()
 
@@ -334,7 +334,8 @@ class DockerPlugins():
         self.module.log(msg=f"  write information to '{self.plugin_information_file}'")
 
         with open(self.plugin_information_file, 'w') as fp:
-            json.dump(data, fp, indent=2, sort_keys=False)
+            json_data = json.dumps(data, indent=2, sort_keys=False)
+            fp.write(f'{json_data}\n')
 
     def __remove_plugin_information(self):
         """
@@ -342,18 +343,6 @@ class DockerPlugins():
         if os.path.exists(self.plugin_information_file):
             os.remove(self.plugin_information_file)
 
-    def __create_directory(self, dir):
-        """
-        """
-        try:
-            os.makedirs(dir, exist_ok=True)
-        except FileExistsError:
-            pass
-
-        if os.path.isdir(dir):
-            return True
-        else:
-            return False
 
 # ---------------------------------------------------------------------------------------
 # Module execution.
@@ -361,35 +350,41 @@ class DockerPlugins():
 
 
 def main():
-    module = AnsibleModule(
-        argument_spec = dict(
-            state = dict(
-                default="present",
-                choices=["absent", "present", "test"]
-            ),
-            #
-            plugin_source = dict(
-                required = True,
-                type='str'
-            ),
-            plugin_version = dict(
-                required = False,
-                type="str",
-                default = "latest"
-            ),
-            plugin_alias = dict(
-                required = True,
-                type='str'
-            )
 
+    args = dict(
+        state = dict(
+            default="present",
+            choices=[
+                "absent",
+                "present",
+                "test"
+            ]
         ),
+        #
+        plugin_source = dict(
+            required = True,
+            type='str'
+        ),
+        plugin_version = dict(
+            required = False,
+            type="str",
+            default = "latest"
+        ),
+        plugin_alias = dict(
+            required = True,
+            type='str'
+        )
+    )
+
+    module = AnsibleModule(
+        argument_spec = args,
         supports_check_mode = True,
     )
 
     dp = DockerPlugins(module)
     result = dp.run()
 
-    module.log(msg="= result: {}".format(result))
+    module.log(msg=f"= result: {result}")
 
     module.exit_json(**result)
 

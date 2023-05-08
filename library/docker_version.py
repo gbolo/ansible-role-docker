@@ -95,20 +95,27 @@ class DockerVersion():
 
 
 def main():
-    module = AnsibleModule(
-        argument_spec = dict(
-            state = dict(
-                default="present",
-                choices=["absent", "present", "test"]
-            ),
+
+    args = dict(
+        state = dict(
+            default="present",
+            choices=[
+                "absent",
+                "present",
+                "test"
+            ]
         ),
+    )
+
+    module = AnsibleModule(
+        argument_spec = args,
         supports_check_mode = True,
     )
 
     dp = DockerVersion(module)
     result = dp.run()
 
-    module.log(msg="= result: {}".format(result))
+    module.log(msg=f"= result: {result}")
 
     module.exit_json(**result)
 

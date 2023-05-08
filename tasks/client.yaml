@@ -5,13 +5,11 @@
     state: absent
     dest: "{{ item.location }}"
   when:
-    - item.enabled is defined
-    - not item.enabled | default('false')
+    - not item.enabled | default('false') | bool
 
 - name: client configuration
   when:
-    - item.enabled is defined
-    - item.enabled | default('false')
+    - item.enabled | default('false') | bool
   block:
     - name: "create docker client directory"
       ansible.builtin.file:
@@ -27,6 +25,6 @@
         dest: "{{ item.location }}"
         auths: "{{ item.auths | default({}) }}"
         formats: "{{ item.formats | default({}) }}"
-      no_log: true
+      # no_log: true
 
 ...

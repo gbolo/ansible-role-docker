@@ -125,6 +125,8 @@ docker_config:
     cert: ""
     key: ""
 
+docker_config_diff: true
+
 docker_python_packages: []
 
 ...

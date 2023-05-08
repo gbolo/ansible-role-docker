@@ -5,15 +5,6 @@
   tags:
     - always
 
-- name: compose
-  ansible.builtin.import_tasks: compose.yaml
-  tags:
-    - docker_compose
-  when:
-    - docker_compose is defined
-    - docker_compose.install is defined
-    - docker_compose.install
-
 - name: repositories
   ansible.builtin.import_tasks: repositories.yml
   when:
@@ -43,5 +34,14 @@
   ansible.builtin.import_tasks: service.yml
   tags:
     - docker_service
+
+- name: compose
+  ansible.builtin.import_tasks: compose.yaml
+  tags:
+    - docker_compose
+  when:
+    - docker_compose is defined
+    - docker_compose.install is defined
+    - docker_compose.install
 
 ...

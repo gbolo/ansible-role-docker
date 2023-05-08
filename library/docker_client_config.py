@@ -1,24 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# (c) 2020, Bodo Schulz <bodo@boone-schulz.de>
+# (c) 2020-2023, Bodo Schulz <bodo@boone-schulz.de>
 # BSD 2-clause (see LICENSE or https://opensource.org/licenses/BSD-2-Clause)
 
 from __future__ import absolute_import, division, print_function
 import os
 import json
-import hashlib
 import base64
-from pathlib import Path
 from ansible.module_utils.basic import AnsibleModule
+from ansible_collections.bodsch.core.plugins.module_utils.directory import create_directory
+from ansible_collections.bodsch.core.plugins.module_utils.checksum import Checksum
 
 __metaclass__ = type
 
-ANSIBLE_METADATA = {
-    'metadata_version': '0.1',
-    'status': ['preview'],
-    'supported_by': 'community'
-}
 
 """
   creates an user configuration like this:
@@ -54,11 +49,7 @@ class DockerClientConfig(object):
         self.auths = module.params.get("auths")
         self.formats = module.params.get("formats")
 
-        self.checksum_directory = f"{Path.home()}/.ansible/cache/docker"
-
-        hashed_dest = self.__checksum(self.dest)
-
-        self.config_checksum = os.path.join(self.checksum_directory, f"client_{hashed_dest}.checksum")
+        self.cache_directory = "/var/cache/ansible/docker"
 
         # TODO
         # maybe later?
@@ -71,27 +62,31 @@ class DockerClientConfig(object):
         """
             run
         """
+        create_directory(self.cache_directory)
 
-        self.__create_directory(self.checksum_directory)
+        self.checksum = Checksum(self.module)
+
+        hashed_dest = self.checksum.checksum(self.dest)
+
+        self.checksum_file_name = os.path.join(self.cache_directory, f"client_{hashed_dest}.checksum")
 
         if self.state == 'absent':
             """
                 remove created files
             """
-
             config_file_exist = False
             config_checksum_exists = False
-            msg = f"docker config {self.dest} not found"
+            msg = f"docker client config {self.dest} not found"
 
             if os.path.isfile(self.dest):
                 config_file_exist = True
                 os.remove(self.dest)
 
-                msg = f"docker config {self.dest} removed"
+                msg = f"docker client config {self.dest} removed"
 
-            if os.path.isfile(self.config_checksum):
+            if os.path.isfile(self.checksum_file_name):
                 config_checksum_exists = True
-                os.remove(self.config_checksum)
+                os.remove(self.checksum_file_name)
 
             return dict(
                 changed = (config_file_exist & config_checksum_exists),
@@ -117,40 +112,34 @@ class DockerClientConfig(object):
             """
                 clean manual removements
             """
-            if os.path.isfile(self.config_checksum):
-                os.remove(self.config_checksum)
+            if os.path.isfile(self.checksum_file_name):
+                os.remove(self.checksum_file_name)
 
         invalid_authentications, authentications = self._handle_authentications()
         formats = self._handle_formats()
-
-        _old_checksum = ''
-        _data_changed = False
 
         data = {
             **authentications,
             **formats
         }
 
-        _checksum = self.__checksum(json.dumps(data, sort_keys=True))
+        changed, new_checksum, old_checksum = self.checksum.validate(self.checksum_file_name, data)
 
-        if os.path.isfile(self.config_checksum):
-            with open(self.config_checksum, "r") as _sum:
-                _old_checksum = _sum.readlines()[0]
+        # self.module.log(f" changed       : {changed}")
+        # self.module.log(f" new_checksum  : {new_checksum}")
+        # self.module.log(f" old_checksum  : {old_checksum}")
 
-        # compare both checksums
-        if _old_checksum != _checksum:
+        if changed:
             with open(self.dest, 'w') as fp:
-                json.dump(data, fp, indent=2, sort_keys=False)
+                json_data = json.dumps(data, indent=2, sort_keys=False)
+                fp.write(f'{json_data}\n')
 
-            with open(self.config_checksum, 'w') as fp:
-                fp.write(_checksum)
-
-            _data_changed = True
+            self.checksum.write_checksum(self.checksum_file_name, new_checksum)
 
         return dict(
-            changed = _data_changed,
+            changed = changed,
             failed = False,
-            msg = f"docker config {self.dest} successfully created."
+            msg = f"docker client config {self.dest} successfully created."
         )
 
     def _handle_authentications(self):
@@ -293,11 +282,6 @@ class DockerClientConfig(object):
         password = data.get("password", None)
 
         if auth:
-            # message = auth
-            # message_bytes = message.encode('utf8')
-            # base64_bytes = base64.standard_b64decode(message_bytes)
-            # base64_message = base64_bytes.decode('utf8')
-            # self.module.log(msg=f" = {base64_message}")
             return auth
 
         d_bytes = f"{username}:{password}".encode('utf-8')
@@ -305,32 +289,7 @@ class DockerClientConfig(object):
         base64_bytes = base64.standard_b64encode(d_bytes)
         base64_message = base64_bytes.decode('utf8')
 
-        # self.module.log(msg=f" = {base64_message}")
-
         return base64_message
-
-    def __checksum(self, plaintext):
-        """
-            create checksum from string
-        """
-        password_bytes = plaintext.encode('utf-8')
-        password_hash = hashlib.sha256(password_bytes)
-        checksum = password_hash.hexdigest()
-
-        return checksum
-
-    def __create_directory(self, dir):
-        """
-        """
-        try:
-            os.makedirs(dir, exist_ok=True)
-        except FileExistsError:
-            pass
-
-        if os.path.isdir(dir):
-            return True
-        else:
-            return False
 
 # ---------------------------------------------------------------------------------------
 # Module execution.
@@ -338,34 +297,39 @@ class DockerClientConfig(object):
 
 
 def main():
-    module = AnsibleModule(
-        argument_spec = dict(
-            state = dict(
-                default="present",
-                choices=[
-                    "absent",
-                    "present"
-                ]
-            ),
-            dest = dict(
-                required=True,
-                type="path"
-            ),
-            #
-            auths = dict(
-                required=False,
-                type="dict"
-            ),
-            formats = dict(
-                required=False,
-                type="dict"
-            )
+
+    args = dict(
+        state = dict(
+            default="present",
+            choices=[
+                "absent",
+                "present"
+            ]
         ),
+        dest = dict(
+            required=True,
+            type="path"
+        ),
+        #
+        auths = dict(
+            required=False,
+            type="dict"
+        ),
+        formats = dict(
+            required=False,
+            type="dict"
+        )
+    )
+
+    module = AnsibleModule(
+        argument_spec = args,
         supports_check_mode = True,
     )
 
     dcc = DockerClientConfig(module)
     result = dcc.run()
+
+    module.log(msg=f"= result: {result}")
 
     module.exit_json(**result)
 
