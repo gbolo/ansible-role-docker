@@ -17,7 +17,7 @@
     name: docker
     state: reloaded
 
-- name: validate config
+- name: validate config  # noqa no-changed-when
   ansible.builtin.command: |
     dockerd --validate
 
@@ -28,7 +28,7 @@
   when:
     - ansible_service_mgr == 'systemd'
 
-- name: information about config changes
+- name: information about config changes  # noqa no-handler
   ansible.builtin.debug:
     msg: "{{ _changed_docker_configuration.diff }}"
   when:

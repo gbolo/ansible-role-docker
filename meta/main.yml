@@ -27,11 +27,18 @@ galaxy_info:
         - bullseye
     - name: Ubuntu
       versions:
-        # 20.04
+        # 20.04 LTS (Focal Fossa)
         - focal
+        # 22.04 LTS (Jammy Jellyfish)
+        - jammy
+        # 22.10 (Kinetic Kudu)
+        # - kinetic
+        # 23.04 (Lunar Lobster)
+        # - lunar
     - name: EL
       versions:
         - "8"
+        - "9"
 
   galaxy_tags:
     - docker

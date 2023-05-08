@@ -36,19 +36,12 @@
     - ansible_os_family | lower == 'archlinux'
     - ansible_service_mgr | lower == 'systemd'
 
-# - name: flush handlers
-  # ansible.builtin.meta: flush_handlers
-
 - name: ensure {{ docker_service.name }} is running
   ansible.builtin.service:
     name: "{{ docker_service.name }}"
     state: started
   register: running_service
   ignore_errors: true
-
-- name: d
-  debug:
-    msg: "{{ running_service }}"
 
 - name: daemon start has failed
   when:
@@ -58,8 +51,6 @@
       ansible.builtin.service:
         name: "{{ docker_service.name }}"
         state: stopped
-      # register: running_service
-      # ignore_errors: false
 
     - name: remove broken config to start daemon
       ansible.builtin.file:
@@ -70,13 +61,13 @@
       ansible.builtin.service:
         name: "{{ docker_service.name }}"
         state: started
-      register: running_service
-      ignore_errors: false
 
 - name: wait for running docker
   ansible.builtin.wait_for:
     path: /run/docker.pid
     state: present
+    delay: 2
+    sleep: 2
     msg: Timeout to find file /run/docker.pid
 
 - name: define docker_version

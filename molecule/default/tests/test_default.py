@@ -98,7 +98,7 @@ def test_packages(host):
     pp.pprint(release)
 
     packages = []
-    packages.append("iptables")
+    # packages.append("iptables")
 
     if not distribution == "artix":
         if distribution == 'arch':

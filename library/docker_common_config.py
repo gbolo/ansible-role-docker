@@ -168,7 +168,7 @@ class DockerCommonConfig(object):
             data["bridge"] = self.bridge
 
         if validate(self.data_root):
-           data["data-root"] = self.data_root
+            data["data-root"] = self.data_root
 
         if validate(self.debug):
             data["debug"] = self.debug

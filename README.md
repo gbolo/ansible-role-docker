@@ -26,11 +26,11 @@ Tested on
 * ArtixLinux
 * Debian based
     - Debian 10 / 11
-    - Ubuntu 20.04
+    - Ubuntu 20.04 / 22.04
 * RedHat based
-    - Alma Linux 8
-    - Rocky Linux 8
-    - OracleLinux 8
+    - Alma Linux 8 / 9
+    - Rocky Linux 8 / 9
+    - OracleLinux 8 / 9
 
 **this role only supports docker versions 1.11+**.
 
@@ -65,6 +65,14 @@ docker_compose: {}
 docker_users: []
 
 docker_plugins: []
+
+docker_client_config: []
+
+docker_config: {}
+
+docker_config_diff: true
+
+docker_python_packages: []
 ```
 
 ### Proxy related
@@ -82,11 +90,9 @@ docker_proxy:
 
 ### docker client configuration
 
-Enable authentication for the Docker Registry.
-
-Here it is possible to create a configuration for different users.
-
-The password stored here is base64 encoded and not encrypted!
+Enable authentication for the Docker Registry.  
+Here it is possible to create a configuration for different users.  
+**The password stored here is base64 encoded and not encrypted!**  
 The creation of a corresponding string can be carried out as follows:
 
 ```bash
@@ -104,7 +110,7 @@ docker_client_config:
         auth: amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg==
 ```
 
-Alternatively, you can also enter your user name and password.
+Alternatively, you can also enter your `username` and `password`.  
 The Ansible module will make a valid Base64 encoded string out of it.
 
 ```yaml
@@ -144,7 +150,6 @@ docker_client_config:
         - ".Tag"
         - ".CreatedAt"
 ```
-
 
 ### default dockerd configuration options
 
@@ -227,6 +232,11 @@ docker_config:
   insecure_registries: []
 ```
 
+When creating the configuration, a diff to the original version can optionally be created and output.
+
+To do this, the variable `docker_config_diff` must be set to `true`.
+
+
 There are more examples in the molecule tests:
 
 - [default](molecule/default/group_vars/all/vars.yml)
@@ -260,6 +270,53 @@ docker_plugins:
     state: present
 ```
 
+### python Support
+
+Some of the modules in this role require suitable python extensions.  
+In recent times, there have been a few incompatibilities here, which is why this point is now also configurable.
+
+The default configuration is as follows:
+
+```yaml
+docker_python_packages:
+  - name: docker
+  - name: requests
+  - name: urllib3
+```
+
+If other pip module versions are installed here, you can overwrite these defaults.  
+It is possible to add versions to each module:
+
+```yaml
+docker_python_packages:
+  - name: docker
+    version: 6.1.1
+```
+
+If a version is specified, an attempt will be made to install exactly this version.  
+However, there is also the possibility to influence this behaviour via `compare_direction`.
+
+```yaml
+docker_python_packages:
+  - name: docker
+    compare_direction: ">"
+    version: 6.0.0
+```
+
+Or to define a corresponding window via `versions`:
+
+```yaml
+docker_python_packages:
+  - name: docker
+  - name: requests
+    versions:
+      - ">= 2.27.0"
+      - "< 2.29.0"
+  - name: urllib3
+    versions:
+      - ">= 1.26.0"
+      - "< 2.0.0"
+```
 
 ## Examples
 
@@ -331,4 +388,4 @@ Advanced playbook with various variables applied
 
 MIT
 
-`FREE SOFTWARE, HELL YEAH!`
+**FREE SOFTWARE, HELL YEAH!**

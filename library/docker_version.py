@@ -34,8 +34,7 @@ class DockerVersion():
         """
         self.module = module
         self.state = module.params.get("state")
-        #
-        self.docker_socket = "/var/run/docker.sock"
+        self.docker_socket = module.params.get("docker_socket")
 
     def run(self):
         """
@@ -44,6 +43,8 @@ class DockerVersion():
         docker_status = False
         docker_version = None
         docker_versions = dict()
+
+        error_msg = None
 
         # TODO
         # with broken ~/.docker/daemon.json will this fail!
@@ -57,19 +58,17 @@ class DockerVersion():
             docker_status = self.docker_client.ping()
 
         except docker.errors.APIError as e:
-            self.module.log(
-                msg=f" exception: {e}"
-            )
+            error_msg = f"APIError : {e}"
+            self.module.log(error_msg)
         except Exception as e:
-            self.module.log(
-                msg=f" exception: {e}"
-            )
+            error_msg = f"Exception: {e}"
+            self.module.log(error_msg)
 
         if not docker_status:
             return dict(
                 changed = False,
                 failed = True,
-                msg = "no running docker found"
+                msg = f"{error_msg} (no running docker found)"
             )
 
         docker_version = self.docker_client.version()
@@ -105,6 +104,11 @@ def main():
                 "test"
             ]
         ),
+        docker_socket=dict(
+            required = False,
+            type="str",
+            default = "/run/docker.sock"
+        )
     )
 
     module = AnsibleModule(
