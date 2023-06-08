@@ -6,6 +6,7 @@
 
 from __future__ import absolute_import, division, print_function
 import os
+import shutil
 import json
 import base64
 from ansible.module_utils.basic import AnsibleModule
@@ -48,7 +49,8 @@ class DockerClientConfig(object):
         self.dest = module.params.get("dest")
         self.auths = module.params.get("auths")
         self.formats = module.params.get("formats")
-
+        pid = os.getpid()
+        self.tmp_directory = os.path.join("/run/.ansible", f"docker_client_config.{str(pid)}")
         self.cache_directory = "/var/cache/ansible/docker"
 
         # TODO
@@ -108,6 +110,11 @@ class DockerClientConfig(object):
                 msg = "'formats' must be an dictionary."
             )
 
+        create_directory(directory=self.tmp_directory, mode="0750")
+
+        if os.path.exists(self.checksum_file_name):
+            os.remove(self.checksum_file_name)
+
         if not os.path.isfile(self.dest):
             """
                 clean manual removements
@@ -123,18 +130,28 @@ class DockerClientConfig(object):
             **formats
         }
 
-        changed, new_checksum, old_checksum = self.checksum.validate(self.checksum_file_name, data)
+        tmp_file     = os.path.join(self.tmp_directory, f"client_{hashed_dest}")
 
-        # self.module.log(f" changed       : {changed}")
-        # self.module.log(f" new_checksum  : {new_checksum}")
-        # self.module.log(f" old_checksum  : {old_checksum}")
+        self.__write_config(tmp_file, data)
+        new_checksum = self.checksum.checksum_from_file(tmp_file)
+        old_checksum = self.checksum.checksum_from_file(self.dest)
+        changed = not (new_checksum == old_checksum)
+
+        self.module.log(f" changed       : {changed}")
+        self.module.log(f" new_checksum  : {new_checksum}")
+        self.module.log(f" old_checksum  : {old_checksum}")
+
+        # changed, new_checksum, old_checksum = self.checksum.validate(self.checksum_file_name, data)
 
         if changed:
-            with open(self.dest, 'w') as fp:
-                json_data = json.dumps(data, indent=2, sort_keys=False)
-                fp.write(f'{json_data}\n')
+            self.__write_config(self.dest, data)
+            # with open(self.dest, 'w') as fp:
+            #     json_data = json.dumps(data, indent=2, sort_keys=False)
+            #     fp.write(f'{json_data}\n')
+            #
+            # self.checksum.write_checksum(self.checksum_file_name, new_checksum)
 
-            self.checksum.write_checksum(self.checksum_file_name, new_checksum)
+        shutil.rmtree(self.tmp_directory)
 
         return dict(
             changed = changed,
@@ -290,6 +307,13 @@ class DockerClientConfig(object):
         base64_message = base64_bytes.decode('utf8')
 
         return base64_message
+
+    def __write_config(self, file_name, data):
+        """
+        """
+        with open(file_name, 'w') as fp:
+            json_data = json.dumps(data, indent=2, sort_keys=False)
+            fp.write(f'{json_data}\n')
 
 # ---------------------------------------------------------------------------------------
 # Module execution.
