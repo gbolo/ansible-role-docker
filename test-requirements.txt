@@ -2,7 +2,7 @@ ansible-lint
 docker
 dnspython
 flake8
-molecule
+molecule>=5.0.1
 molecule-docker
 molecule-plugins[vagrant]
 molecule-plugins[docker]
