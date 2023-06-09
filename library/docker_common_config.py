@@ -7,7 +7,6 @@
 from __future__ import absolute_import, division, print_function
 import os
 import json
-
 import docker
 
 from ansible.module_utils.basic import AnsibleModule
@@ -93,6 +92,9 @@ class DockerCommonConfig(object):
         self.cache_directory = "/var/cache/ansible/docker"
         self.checksum_file_name = os.path.join(self.cache_directory, "daemon.checksum")
 
+        pid = os.getpid()
+        self.tmp_directory = os.path.join("/run/.ansible", f"docker_common_config.{str(pid)}")
+
     def run(self):
         """
             run
@@ -121,36 +123,42 @@ class DockerCommonConfig(object):
             if os.path.isfile(self.checksum_file_name):
                 os.remove(self.checksum_file_name)
 
-        _msg = "The configuration has not been changed."
         _diff = []
 
         self.__docker_client()
 
         data = self.config_opts()
 
-        changed, new_checksum, old_checksum = checksum.validate(self.checksum_file_name, data)
+        create_directory(directory=self.tmp_directory, mode="0750")
+        tmp_file     = os.path.join(self.tmp_directory, "daemon.json")
+        self.__write_config(tmp_file, data)
+        new_checksum = checksum.checksum_from_file(tmp_file)
+        old_checksum = checksum.checksum_from_file(self.config_file)
+        changed = not (new_checksum == old_checksum)
+        new_file = False
+        msg = "The configuration has not been changed."
 
         # self.module.log(f" changed       : {changed}")
         # self.module.log(f" new_checksum  : {new_checksum}")
         # self.module.log(f" old_checksum  : {old_checksum}")
 
         if changed:
-            with open(self.config_file, 'w') as fp:
-                json_data = json.dumps(data, indent=2, sort_keys=False)
-                fp.write(f'{json_data}\n')
-
-            checksum.write_checksum(self.checksum_file_name, new_checksum)
+            new_file = (old_checksum is None)
 
             if self.diff_output:
                 difference = self.create_diff(self.config_file, data)
                 _diff = difference
 
-            _msg = "The configuration has been successfully updated."
+            self.__write_config(self.config_file, data)
+            msg = "The configuration has been successfully updated."
+
+        if new_file:
+            msg = "The configuration was successfully created."
 
         return dict(
             changed = changed,
             failed = False,
-            msg = _msg,
+            msg = msg,
             diff = _diff
         )
 
@@ -431,6 +439,12 @@ class DockerCommonConfig(object):
         else:
             return plugin_valid, msg
 
+    def __write_config(self, file_name, data):
+        """
+        """
+        with open(file_name, 'w') as fp:
+            json_data = json.dumps(data, indent=2, sort_keys=False)
+            fp.write(f'{json_data}\n')
 
 # ---------------------------------------------------------------------------------------
 # Module execution.

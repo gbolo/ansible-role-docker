@@ -1,0 +1,52 @@
+---
+
+docker_config_diff: true
+
+docker_client_config:
+  ## the location we should push client configuration
+  - location: "/root/.docker/config.json"
+    enabled: true
+    auths:
+      registry.gitfoo.tld:
+        auth: amVua2luczpydWJiZWwtZGllLWthdHotZHUtZHVtbXNjaHfDpHR6ZXIxCg==
+      test.tld:
+        username: "FOO-was-sonst"
+        password: "ja-toll-schon-wieder-alles-scheisse!"
+    formats:
+      ps:
+        - ".ID"
+        - ".Names"
+        - ".Status"
+        - ".RunningFor"
+      images:
+        - ".ID"
+        - ".Size"
+        - ".Repository"
+        - ".Tag"
+        - ".CreatedAt"
+
+    ## the location we should push client configuration
+  - location: "/var/tmp/foo/config.json"
+    state: absent
+    enabled: false
+    owner: "nobody"
+    group: "1000"
+    auths:
+      "test.tld":
+        username: "FOO-was-sonst"
+        password: "ja-toll-schon-wieder-alles-scheisse!"
+    formats:
+      ps:
+        - ".ID"
+        - ".Names"
+        - ".Status"
+        - ".RunningFor"
+
+    ## must be ignored
+  - enabled: false
+    auths:
+      "test.tld":
+        username: "FOO-was-sonst"
+        passwort: "ja-toll-schon-wieder-alles-scheisse!"
+
+...

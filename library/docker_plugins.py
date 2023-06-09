@@ -162,7 +162,6 @@ class DockerPlugins():
     def install_plugin(self):
         """
         """
-
         installed_plugin = self.installed_plugin_data.get('name', None)
 
         if not self.plugin_version_equal and installed_plugin:
@@ -218,7 +217,6 @@ class DockerPlugins():
             )
 
         else:
-
             try:
                 self.module.log(msg=f"install plugin in version {self.plugin_version}")
 

@@ -1,0 +1,7 @@
+---
+
+- name: snakeoil
+  src: bodsch.snakeoil
+  version: 1.3.1
+
+...

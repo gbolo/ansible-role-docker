@@ -34,7 +34,7 @@ docker_client_config:
     auths:
       "test.tld":
         username: "FOO-was-sonst"
-        passwort: "ja-toll-schon-wieder-alles-scheisse!"
+        password: "ja-toll-schon-wieder-alles-scheisse!"
 
 docker_config:
   # data_root: /opt/docker

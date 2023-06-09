@@ -19,11 +19,8 @@
     - docker_users | count > 0
 
 - name: manage docker client configuration
-  ansible.builtin.include_tasks: client.yaml
-  loop: "{{ docker_client_config }}"
-  loop_control:
-    index_var: index
-    label: "{{ item.location }}"
+  docker_client_configs:
+    configs: "{{ docker_client_config }}"
   when:
     - docker_client_config is defined
     - docker_client_config | count > 0
@@ -116,7 +113,7 @@
     tls_key: "{{ docker_config.tls.key | default(omit) }}"
   register: _changed_docker_configuration
   notify:
-    - information about config changes
     - restart-docker
+    - information about config changes
 
 ...
